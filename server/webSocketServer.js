@@ -1,5 +1,6 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
+import { SuperTicTacToe } from './game.js';
 
 function createWebSocketServer(app) {
     const httpServer = createServer(app);
@@ -12,7 +13,11 @@ function createWebSocketServer(app) {
     });
 
     io.on('connection', (socket) => {
+        const game = new SuperTicTacToe();
         console.log('a user connected');
+        game.setBoardIndex(0);
+        game.makeMove(3);
+        console.log(game.getState());
     });
 
     io.on('disconnect', (socket) => {
