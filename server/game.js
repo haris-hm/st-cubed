@@ -63,7 +63,7 @@ class SuperTicTacToe {
     }
 
     makeMove(position) {
-        const board = this.boards[this.boardIndex];
+        const board = this.boards[this.currentBoardIndex];
         const moveResult = board.makeMove(position, this.currentPlayer);
         
         if (moveResult) {
@@ -74,7 +74,7 @@ class SuperTicTacToe {
             const winner = board.checkWinner();
 
             if (winner) {
-                this.superBoard.makeMove(this.boardIndex, winner)
+                this.superBoard.makeMove(this.currentBoardIndex, winner)
             }
         }
     }
@@ -96,16 +96,16 @@ class SuperTicTacToe {
 
     #setNextBoardIndex(boardIndex) {
         if (this.superBoard.checkWinner() === BoardState.UNCLAIMED) {
-            this.boardIndex = boardIndex;
+            this.currentBoardIndex = boardIndex;
         }
         else {
-            this.boardIndex = null;
+            this.currentBoardIndex = null;
         }
     }
 
     setBoardIndex(newIndex) {
-        if (this.boardIndex === null) {
-            this.boardIndex = newIndex;
+        if (this.currentBoardIndex === null) {
+            this.currentBoardIndex = newIndex;
         }
         else {
             throw new Error(`Cannot set board index as the current index is not null. The current index is ${this.boardIndex}.`)
@@ -113,13 +113,13 @@ class SuperTicTacToe {
     }
 
     getBoardIndex() {
-        return this.getBoardIndex;
+        return this.currentBoardIndex;
     }
 
     getState() {
         return {
             currentPlayer: this.currentPlayer,
-            currentBoardIndex: this.boardIndex,
+            currentBoardIndex: this.currentBoardIndex,
             subGameStates: this.boards.map(board => board.getState().board),
             superBoardState: this.superBoard.getState().board,
         };
