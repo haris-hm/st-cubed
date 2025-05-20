@@ -1,11 +1,10 @@
-const express = require('express');
-const app = express();
-const PORT = 3000;
+import { app } from './expressServer.js';
+import { createWebSocketServer } from './webSocketServer.js';
 
-app.get('/', (req, res) => {
-  res.send('Hello from Express!');
-});
+const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const server = createWebSocketServer(app);
+
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
