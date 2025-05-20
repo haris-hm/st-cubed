@@ -1,6 +1,9 @@
+import { useSocket } from './hooks/SocketConnection';
+
 import './styles/input.css'
 
 function App() {
+  const socketRef = useSocket('http://localhost:3001'); // Adjust port if needed
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="relative w-48 h-48 flex items-center justify-center">
