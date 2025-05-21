@@ -1,7 +1,10 @@
 import { app } from './expressServer.js';
 import { createWebSocketServer } from './webSocketServer.js';
+import dotenv from "dotenv";
 
-const PORT = process.env.PORT || 3001;
+dotenv.config({ path: "../.env" });
+
+const PORT = process.env.WEBAPP_SERVE_PORT || 3001;
 
 const server = createWebSocketServer(app);
 

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSocket } from './hooks/SocketConnection';
+import { useSocket } from './hooks/useSocket';
+import { useDiscordSDK } from './hooks/useDiscordSDK';
 
 import './styles/input.css'
 
 function App() {
-  const socketRef = useSocket('http://localhost:3001');
+  const socketRef = useSocket('/.proxy/ws');
+  const { discordSdk, auth } = useDiscordSDK();
   const [boardState, setBoardState] = useState(null);
 
   useEffect(() => {

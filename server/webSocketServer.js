@@ -78,8 +78,9 @@ function createSocketEndpoints(socket, io) {
 function createWebSocketServer(app) {
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
+        path: '/ws',
         cors: {
-            origin: "http://localhost:5173", // Vite dev server default
+            origin: "*", 
             methods: ["GET", "POST"],
             credentials: true
         }

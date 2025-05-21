@@ -5,7 +5,10 @@ export function useSocket(serverUrl) {
   const socketRef = useRef();
 
   useEffect(() => {
-    socketRef.current = io(serverUrl);
+    socketRef.current = io({
+      path: serverUrl,
+      transports: ['websocket'],
+    });
 
     return () => {
       socketRef.current.disconnect();
