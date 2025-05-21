@@ -31,7 +31,8 @@ export default defineConfig(({ mode }) => {
 			},
 			allowedHosts: [
 				// Allow all subdomains of trycloudflare.com
-				".trycloudflare.com"
+				".trycloudflare.com",
+				"hephaestus.pegasus-economy.ts.net",
 			],
 		},
 	}
