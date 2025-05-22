@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Background from "../components/Background";
 
-import { DiscordSDKContext } from "../hooks/useDiscordSDK";
+import { DiscordSDKContext } from "../context/DiscordProvider";
 
 function Home() {
 	const navigate = useNavigate();

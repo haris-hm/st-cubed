@@ -7,7 +7,7 @@ import RoomJoiner from "./RoomJoiner";
 import GameRoom from "./GameRoom";
 import Loading from "../components/Loading";
 
-import { DiscordSDKContext } from "../hooks/useDiscordSDK";
+import { DiscordSDKContext } from "../context/DiscordProvider";
 
 export function Router() {
 	const { fetching } = useContext(DiscordSDKContext);

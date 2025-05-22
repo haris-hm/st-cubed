@@ -1,8 +1,6 @@
 import { useEffect, useState, createContext } from "react";
 import { DiscordSDK } from "@discord/embedded-app-sdk";
 
-export const DiscordSDKContext = createContext(null);
-
 export function useDiscordSDK() {
 	const [discordSDK, setDiscordSDK] = useState(null);
 	const [auth, setAuth] = useState(null);

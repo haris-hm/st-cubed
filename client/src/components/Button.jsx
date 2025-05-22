@@ -1,4 +1,4 @@
-function Button({ text, onClick, color }) {
+function Button({ text, color, onClick }) {
 	const colorClasses = {
 		primary:
 			"bg-primary hover:bg-primary-light focus:outline-primary-light active:bg-primary-active active:text-active-text",

@@ -29,7 +29,7 @@ app.post("/api/token", async (req, res) => {
       code: req.body.code,
     }),
   });
-  console.log("Response from Discord:", response);
+  // console.log("Response from Discord:", response);
 
   // Retrieve the access_token from the response
   const { access_token } = await response.json();

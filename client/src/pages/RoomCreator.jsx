@@ -5,7 +5,9 @@ import { SelectorOption, SelectorButton } from "../components/SelectorButton";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
 
-import { DiscordSDKContext } from "../hooks/useDiscordSDK";
+import { DiscordSDKContext } from "../context/DiscordProvider";
+
+import { createRoom } from "../util/socket/emit";
 
 function RoomCreator() {
 	const [selectedGameMode, setSelectedGameMode] = useState(null);
@@ -13,24 +15,34 @@ function RoomCreator() {
 	const { discordSDK, auth } = useContext(DiscordSDKContext);
 
 	const gameModeOptions = [
+		new SelectorOption("Basic", "Timeless Classic", false),
 		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true),
 		new SelectorOption("Campaign", "Coming soon", false),
 		new SelectorOption("Speedrun", "Coming soon", false),
 	];
 
 	const timeLimitOptions = [
-		new SelectorOption("1 min", "", true),
-		new SelectorOption("3 min", "", true),
-		new SelectorOption("5 min", "", true),
-		new SelectorOption("Unlimited", "", true),
+		new SelectorOption("Unlimited", "Low stakes", true),
+		new SelectorOption("3 min", "Easy", true),
+		new SelectorOption("1 min", "Medium", true),
+		new SelectorOption("30 sec", "Hard", true),
 	];
 
 	function handleSelectGameMode(selectedOption) {
+		setSelectedGameMode(selectedOption);
 		console.log("Selected game mode:", selectedOption);
 	}
 
 	function handleSelectTimeLimit(selectedOption) {
+		setSelectedTimeLimit(selectedOption);
 		console.log("Selected game mode:", selectedOption);
+	}
+
+	function handlePlay() {
+		console.log("Play button clicked");
+		createRoom((roomId) => {
+			console.log("Room created with ID:", roomId);
+		});
 	}
 
 	return (
@@ -44,7 +56,7 @@ function RoomCreator() {
 					<SelectorButton
 						color={"tertiary"}
 						options={gameModeOptions}
-						defaultOptionIdx={0}
+						defaultOptionIdx={1}
 						onChange={handleSelectGameMode}
 					></SelectorButton>
 					<p className="py-2 text-2xl">Time Limit:</p>
@@ -57,8 +69,8 @@ function RoomCreator() {
 					<span className="py-4"></span>
 					<Button
 						text={"Play"}
-						onClick={() => {}}
 						color={"primary"}
+						onClick={handlePlay}
 					></Button>
 				</Modal>
 			</div>
