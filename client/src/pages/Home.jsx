@@ -1,6 +1,8 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Button } from "../components/Button";
+
 import { DiscordSDKContext } from "../hooks/useDiscordSDK";
 
 function Home() {
@@ -30,18 +32,16 @@ function Home() {
 				/>
 
 				<div className="min-w-1/2 drop-shadow-dark max-md:min-w-8/10 text-light font-noto-sans my-12 flex select-none flex-row items-center justify-center text-3xl font-bold drop-shadow-lg max-md:flex-col">
-					<button
-						className="bg-primary text-light min-w-1/2 max-md:min-w-1/1 hover:bg-primary-light focus:outline-primary-light min-h-20 rounded-xl px-2 focus:outline-2 focus:outline-offset-2 active:bg-cyan-200 active:text-gray-500 max-md:mx-0 max-md:my-3 md:mx-3"
+					<Button
+						color="primary"
 						onClick={handleCreateRoom}
-					>
-						Create Room
-					</button>
-					<button
-						className="bg-secondary min-w-1/2 max-md:min-w-1/1 min-h-20 rounded-xl px-2 hover:bg-red-400 focus:outline-2 focus:outline-offset-2 focus:outline-red-400 active:bg-red-200 active:text-gray-500 max-md:mx-0 max-md:my-3 md:mx-3"
+						text="Create Room"
+					/>
+					<Button
+						color="secondary"
 						onClick={handleJoinRoom}
-					>
-						Join Room
-					</button>
+						text="Join Room"
+					/>
 				</div>
 			</div>
 		</div>
