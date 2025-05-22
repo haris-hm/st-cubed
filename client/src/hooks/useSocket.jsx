@@ -1,19 +1,21 @@
-import { useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import { useEffect, useRef } from "react";
+import { io } from "socket.io-client";
 
-export function useSocket(serverUrl) {
-  const socketRef = useRef();
+function useSocket(serverUrl) {
+	const socketRef = useRef();
 
-  useEffect(() => {
-    socketRef.current = io({
-      path: serverUrl,
-      transports: ['websocket'],
-    });
+	useEffect(() => {
+		socketRef.current = io({
+			path: serverUrl,
+			transports: ["websocket"],
+		});
 
-    return () => {
-      socketRef.current.disconnect();
-    };
-  }, [serverUrl]);
+		return () => {
+			socketRef.current.disconnect();
+		};
+	}, [serverUrl]);
 
-  return socketRef;
+	return socketRef;
 }
+
+export default useSocket;
