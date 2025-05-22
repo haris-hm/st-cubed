@@ -1,7 +1,11 @@
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { DiscordSDKContext } from "../hooks/useDiscordSDK";
 
 function Home() {
 	const navigate = useNavigate();
+	const { discordSDK, auth } = useContext(DiscordSDKContext);
 
 	const handleCreateRoom = () => {
 		navigate("/game/create");

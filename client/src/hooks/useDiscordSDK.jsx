@@ -1,19 +1,21 @@
 import { useEffect, useState, createContext } from "react";
 import { DiscordSDK } from "@discord/embedded-app-sdk";
 
-function useDiscordSDK() {
+export const DiscordSDKContext = createContext(null);
+
+export function useDiscordSDK() {
 	const [discordSDK, setDiscordSDK] = useState(null);
 	const [auth, setAuth] = useState(null);
+	const [fetching, setFetching] = useState(true);
 
 	useEffect(() => {
 		const sdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
-		setDiscordSDK(sdk);
 
 		async function setup() {
 			await sdk.ready();
 
 			// Authorize with Discord Client
-			const { code } = await discordSDK.commands.authorize({
+			const { code } = await sdk.commands.authorize({
 				client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
 				response_type: "code",
 				state: "",
@@ -37,7 +39,7 @@ function useDiscordSDK() {
 			const { access_token } = await response.json();
 
 			// Authenticate with Discord client (using the access_token)
-			let authResult = await discordSDK.commands.authenticate({
+			let authResult = await sdk.commands.authenticate({
 				access_token,
 			});
 
@@ -45,15 +47,13 @@ function useDiscordSDK() {
 				throw new Error("Authenticate command failed");
 			}
 
+			setDiscordSDK(sdk);
 			setAuth(authResult);
+			setFetching(false);
 		}
 
 		setup();
 	}, []);
 
-	return { discordSDK, auth };
+	return { discordSDK, auth, fetching };
 }
-
-export const DiscordSDKContext = createContext(useDiscordSDK());
-
-export default useDiscordSDK;
