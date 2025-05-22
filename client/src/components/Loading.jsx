@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import Background from "./Background";
+import Modal from "./Modal";
 
 function Loading() {
 	const [dots, setDots] = useState(1);
@@ -43,18 +44,20 @@ function Loading() {
 
 	return (
 		<Background>
-			<div className="bg-gray drop-shadow-dark border-primary inset-shadow-sm inset-shadow-dark flex flex-col items-center rounded-2xl border-8 p-8 text-center drop-shadow-lg">
-				<span className="invisible">
+			<div className="flex min-h-screen items-center justify-center">
+				<Modal>
+					<span className="invisible">
+						<p className="text-dark mt-4 text-2xl">
+							{randomMessage}
+							{"..."}
+						</p>
+					</span>
+					<div className="border-primary border-r-6 border-t-6 h-16 w-16 animate-spin rounded-full border-solid"></div>
 					<p className="text-dark mt-4 text-2xl">
 						{randomMessage}
-						{"..."}
+						{".".repeat(dots)}
 					</p>
-				</span>
-				<div className="border-primary border-r-6 border-t-6 h-16 w-16 animate-spin rounded-full border-solid"></div>
-				<p className="text-dark mt-4 text-2xl">
-					{randomMessage}
-					{".".repeat(dots)}
-				</p>
+				</Modal>
 			</div>
 		</Background>
 	);

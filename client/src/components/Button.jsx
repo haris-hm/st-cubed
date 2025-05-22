@@ -1,4 +1,4 @@
-export function Button({ text, onClick, color }) {
+function Button({ text, onClick, color }) {
 	const colorClasses = {
 		primary:
 			"bg-primary hover:bg-primary-light focus:outline-primary-light active:bg-primary-active active:text-active-text",
@@ -9,9 +9,11 @@ export function Button({ text, onClick, color }) {
 	return (
 		<button
 			onClick={onClick}
-			className={`${colorClasses[color]} min-w-1/2 max-md:min-w-1/1 min-h-20 rounded-xl px-2 focus:outline-2 focus:outline-offset-2 max-md:mx-0 max-md:my-3 md:mx-3`}
+			className={`${colorClasses[color]} min-w-1/1 text-light font-noto-sans min-h-20 cursor-pointer select-none rounded-xl text-3xl font-bold focus:outline-2 focus:outline-offset-2 max-md:mx-0 max-md:my-3 md:mx-3`}
 		>
 			{text}
 		</button>
 	);
 }
+
+export default Button;

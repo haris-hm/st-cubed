@@ -10,8 +10,11 @@
 	--color-secondary-light: var(--color-red-400);
 	--color-secondary-active: var(--color-red-200);
 	--color-tertiary: #c13ce2;
+	--color-tertiary-light: var(--color-purple-400);
+	--color-tertiary-active: var(--color-purple-200);
 	--color-light: #f5f5f5;
 	--color-gray: #c1cad6;
+	--color-modal-gray: var(--color-gray-300);
 	--color-dark: #0a100d;
 
 	--color-active-text: var(--color-gray-500);
