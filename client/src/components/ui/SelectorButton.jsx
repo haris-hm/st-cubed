@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 
 class SelectorOption {
-	constructor(name, description, enabled) {
+	constructor(name, description, enabled, value) {
 		this.name = name;
 		this.description = description;
 		this.enabled = enabled;
+		this.value = value;
 	}
 
 	getName() {
@@ -17,6 +18,10 @@ class SelectorOption {
 
 	getEnabled() {
 		return this.enabled;
+	}
+
+	getValue() {
+		return this.value;
 	}
 }
 

@@ -1,9 +1,13 @@
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import Background from "../components/Background";
-import { SelectorOption, SelectorButton } from "../components/SelectorButton";
-import Modal from "../components/Modal";
-import Button from "../components/Button";
+import Background from "../components/ui/Background";
+import {
+	SelectorOption,
+	SelectorButton,
+} from "../components/ui/SelectorButton";
+import Modal from "../components/ui/Modal";
+import Button from "../components/ui/Button";
 
 import { DiscordSDKContext } from "../context/DiscordProvider";
 
@@ -13,35 +17,34 @@ function RoomCreator() {
 	const [selectedGameMode, setSelectedGameMode] = useState(null);
 	const [selectedTimeLimit, setSelectedTimeLimit] = useState(null);
 	const { discordSDK, auth } = useContext(DiscordSDKContext);
+	const navigate = useNavigate();
 
 	const gameModeOptions = [
-		new SelectorOption("Basic", "Timeless Classic", false),
-		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true),
-		new SelectorOption("Campaign", "Coming soon", false),
-		new SelectorOption("Speedrun", "Coming soon", false),
+		new SelectorOption("Basic", "Timeless Classic", false, 0),
+		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true, 1),
+		new SelectorOption("Campaign", "Coming soon", false, 2),
+		new SelectorOption("Speedrun", "Coming soon", false, 3),
 	];
 
 	const timeLimitOptions = [
-		new SelectorOption("Unlimited", "Low stakes", true),
-		new SelectorOption("3 min", "Easy", true),
-		new SelectorOption("1 min", "Medium", true),
-		new SelectorOption("30 sec", "Hard", true),
+		new SelectorOption("Unlimited", "Low stakes", true, Infinity),
+		new SelectorOption("3 min", "Easy", true, 60 * 3),
+		new SelectorOption("1 min", "Medium", true, 60),
+		new SelectorOption("30 sec", "Hard", true, 30),
 	];
 
 	function handleSelectGameMode(selectedOption) {
 		setSelectedGameMode(selectedOption);
-		console.log("Selected game mode:", selectedOption);
 	}
 
 	function handleSelectTimeLimit(selectedOption) {
 		setSelectedTimeLimit(selectedOption);
-		console.log("Selected game mode:", selectedOption);
 	}
 
 	function handlePlay() {
-		console.log("Play button clicked");
 		createRoom((roomId) => {
 			console.log("Room created with ID:", roomId);
+			navigate(`/game/${roomId}`);
 		});
 	}
 

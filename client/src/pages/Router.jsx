@@ -5,7 +5,7 @@ import Home from "./Home";
 import RoomCreator from "./RoomCreator";
 import RoomJoiner from "./RoomJoiner";
 import GameRoom from "./GameRoom";
-import Loading from "../components/Loading";
+import Loading from "../components/ui/Loading";
 
 import { DiscordSDKContext } from "../context/DiscordProvider";
 
