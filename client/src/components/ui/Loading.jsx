@@ -53,7 +53,7 @@ function Loading() {
 						</p>
 					</span>
 					<div className="border-primary border-r-6 border-t-6 h-16 w-16 animate-spin rounded-full border-solid"></div>
-					<p className="text-dark mt-4 text-2xl">
+					<p className="text-dark mt-4 select-none text-2xl">
 						{randomMessage}
 						{".".repeat(dots)}
 					</p>

@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import Button from "../components/ui/Button";
 import Background from "../components/ui/Background";
+import ProfilePicture from "../components/ui/ProfilePicture";
 
 import { DiscordSDKContext } from "../context/DiscordProvider";
 import { setActivity } from "../util/discord/setActivity";
+import { getUser } from "../util/discord/getUser";
 
 function Home() {
 	const navigate = useNavigate();
@@ -13,6 +15,7 @@ function Home() {
 
 	useEffect(() => {
 		setActivity(discordSDK, { state: "In menu" });
+		// getUser(auth);
 	}, [discordSDK]);
 
 	const handleCreateRoom = () => {
@@ -25,17 +28,20 @@ function Home() {
 
 	return (
 		<Background>
+			<ProfilePicture />
 			<div className="grid min-h-screen">
 				<div className="flex flex-col items-center justify-center">
 					<img
 						src="/.proxy/logos/full-st3-alt.svg"
 						alt="Super Tic-Tac-Toe"
-						className="max-w-4/10 drop-shadow-dark drop-shadow-xl max-md:hidden"
+						className="max-w-4/10 drop-shadow-dark select-none drop-shadow-xl max-md:hidden"
+						draggable="false"
 					/>
 					<img
 						src="/.proxy/logos/full-st3-alt-mobile.svg"
 						alt="Super Tic-Tac-Toe"
-						className="max-w-6/10 drop-shadow-dark drop-shadow-xl md:hidden"
+						className="max-w-6/10 drop-shadow-dark select-none drop-shadow-xl md:hidden"
+						draggable="false"
 					/>
 
 					<div className="min-w-1/2 drop-shadow-dark max-md:min-w-8/10 my-12 flex flex-row items-center justify-center drop-shadow-lg max-md:flex-col">

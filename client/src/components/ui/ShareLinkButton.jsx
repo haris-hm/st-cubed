@@ -5,20 +5,40 @@ import { DiscordSDKContext } from "../../context/DiscordProvider";
 
 function ShareLinkButton({ message }) {
 	const [copied, setCopied] = useState(false);
+	const [seconds, setSeconds] = useState(0);
 	const { discordSDK } = useContext(DiscordSDKContext);
 	const iconRef = useRef(null);
 	const buttonRef = useRef(null);
+	const secondsRef = useRef(null);
+
+	const timeoutSeconds = 10;
 
 	useEffect(() => {
-		if (copied) {
-			const timer = setTimeout(() => {
-				iconRef.current.src = "/.proxy/icons/share.svg";
-				iconRef.current.classList.remove("opacity-50");
-				setCopied(false);
-			}, 10000);
+		let countdown;
 
-			return () => clearTimeout(timer);
+		if (copied) {
+			setSeconds(timeoutSeconds);
+			countdown = setInterval(() => {
+				setSeconds((prev) => {
+					if (prev <= 1) {
+						clearInterval(countdown);
+						setCopied(false);
+
+						if (iconRef.current && buttonRef.current) {
+							iconRef.current.src = "/.proxy/icons/share.svg";
+							buttonRef.current.disabled = false;
+						}
+
+						return 0;
+					}
+					return prev - 1;
+				});
+			}, 1000);
 		}
+
+		return () => {
+			clearInterval(countdown);
+		};
 	}, [copied]);
 
 	const handleCopy = () => {
@@ -41,22 +61,31 @@ function ShareLinkButton({ message }) {
 			onClick={handleCopy}
 			className="disabled:opacity-50"
 		>
-			<img
-				ref={iconRef}
-				className="visible size-8"
-				src={"/.proxy/icons/share.svg"}
-				alt="Copy"
-				onMouseEnter={() => {
-					if (iconRef.current && !copied) {
-						iconRef.current.src = "/.proxy/icons/share-hover.svg";
-					}
-				}}
-				onMouseLeave={() => {
-					if (iconRef.current && !copied) {
-						iconRef.current.src = "/.proxy/icons/share.svg";
-					}
-				}}
-			></img>
+			<div className="flex flex-row items-center justify-center">
+				<img
+					ref={iconRef}
+					className="size-8 select-none max-md:size-5"
+					src={"/.proxy/icons/share.svg"}
+					alt="Copy"
+					onMouseEnter={() => {
+						if (iconRef.current && !copied) {
+							iconRef.current.src =
+								"/.proxy/icons/share-hover.svg";
+						}
+					}}
+					onMouseLeave={() => {
+						if (iconRef.current && !copied) {
+							iconRef.current.src = "/.proxy/icons/share.svg";
+						}
+					}}
+				></img>
+				<p
+					className={`text-active-text ml-4 text-lg max-md:ml-2 max-md:text-base ${copied && seconds > 0 ? "block" : "hidden"}`}
+					ref={secondsRef}
+				>
+					{seconds}
+				</p>
+			</div>
 		</button>
 	);
 }

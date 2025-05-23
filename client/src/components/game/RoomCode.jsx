@@ -8,14 +8,14 @@ function RoomCode({ roomId }) {
 			<div className="font-noto-sans text-primary min-w-screen flex min-h-screen select-none flex-col items-center justify-center">
 				<div className="max-md:max-w-8/10 flex flex-col items-center justify-center">
 					<Modal>
-						<h1 className="mb-3 text-5xl font-semibold">
+						<h1 className="mb-3 text-5xl font-semibold max-md:text-2xl">
 							Waiting for a friend...
 						</h1>
-						<h2 className="text-active-text text-2xl font-medium">
+						<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
 							Share the following code and have your friend join!
 						</h2>
 						<div className="flex flex-row items-center justify-center">
-							<h1 className="mt-5 text-5xl font-black">
+							<h1 className="mt-5 text-5xl font-black max-md:text-2xl">
 								{roomId}
 							</h1>
 							<div className="ml-4 mt-7">
