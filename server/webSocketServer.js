@@ -30,9 +30,11 @@ function createSocketEndpoints(socket, io) {
     // DEBUG
     console.log(`New client connected: ${socket.id}`);
 
-    socket.on('create-room', (callback) => {
+    socket.on('create-room', ({ gameMode, timeLimit }, callback) => {
         const roomID = generateRoomID();
         console.log(`Room created: ${roomID}`);
+        console.log(`   Game mode: ${gameMode}`);
+        console.log(`   Time limit: ${timeLimit}`);
         const game = new SuperTicTacToe();
         currentGames.set(roomID, game);
         socket.join(roomID);

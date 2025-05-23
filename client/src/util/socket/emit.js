@@ -1,7 +1,7 @@
 import { socket } from "./initSockets";
 
-export const createRoom = (callback) => {
-	socket.emit("create-room", callback);
+export const createRoom = ({ gameMode, timeLimit }, callback) => {
+	socket.emit("create-room", { gameMode, timeLimit }, callback);
 };
 
 export const makeMove = (boardIndex, position, callback) => {

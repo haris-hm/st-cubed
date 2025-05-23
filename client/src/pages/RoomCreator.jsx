@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Background from "../components/ui/Background";
@@ -10,43 +10,55 @@ import BackButton from "../components/ui/BackButton";
 import Modal from "../components/ui/Modal";
 import Button from "../components/ui/Button";
 
-import { DiscordSDKContext } from "../context/DiscordProvider";
-
 import { createRoom } from "../util/socket/emit";
 
 function RoomCreator() {
-	const [selectedGameMode, setSelectedGameMode] = useState(null);
-	const [selectedTimeLimit, setSelectedTimeLimit] = useState(null);
-	const { discordSDK, auth } = useContext(DiscordSDKContext);
+	const [selectedGameModeIdx, setSelectedGameModeIdx] = useState(0);
+	const [selectedTimeLimitIdx, setSelectedTimeLimitIdx] = useState(0);
 	const navigate = useNavigate();
 
 	const gameModeOptions = [
-		new SelectorOption("Basic", "Timeless Classic", false, 0),
-		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true, 1),
-		new SelectorOption("Campaign", "Coming soon", false, 2),
-		new SelectorOption("Speedrun", "Coming soon", false, 3),
+		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true, 0),
+		new SelectorOption("Campaign", "Coming soon", false, 1),
+		new SelectorOption("Speedrun", "Coming soon", false, 2),
+		new SelectorOption("Basic", "Coming soon", false, 3), // Set description to "Timeless classic" when implemented
 	];
 
 	const timeLimitOptions = [
-		new SelectorOption("Unlimited", "Low stakes", true, Infinity),
+		new SelectorOption("Unlimited", "Low stakes", true, Math.),
 		new SelectorOption("3 min", "Easy", true, 60 * 3),
 		new SelectorOption("1 min", "Medium", true, 60),
 		new SelectorOption("30 sec", "Hard", true, 30),
 	];
 
+	useEffect(() => {
+		console.log(`Selected game mode: ${selectedGameModeIdx}`);
+		console.log(`Selected time limit: ${selectedTimeLimitIdx}`);
+	}, [selectedGameModeIdx, selectedTimeLimitIdx]);
+
 	function handleSelectGameMode(selectedOption) {
-		setSelectedGameMode(selectedOption);
+		setSelectedGameModeIdx(selectedOption);
 	}
 
 	function handleSelectTimeLimit(selectedOption) {
-		setSelectedTimeLimit(selectedOption);
+		setSelectedTimeLimitIdx(selectedOption);
 	}
 
 	function handlePlay() {
-		createRoom((roomId) => {
-			console.log("Room created with ID:", roomId);
-			navigate(`/game/${roomId}`);
-		});
+		const selectedGameMode = gameModeOptions[selectedGameModeIdx];
+		const selectedTimeLimit = timeLimitOptions[selectedTimeLimitIdx];
+
+		if (selectedGameMode.isEnabled() && selectedTimeLimit.isEnabled()) {
+			createRoom(
+				{
+					gameMode: selectedGameMode.getValue(),
+					timeLimit: selectedTimeLimit.getValue(),
+				},
+				(roomId) => {
+					navigate(`/game/${roomId}`);
+				},
+			);
+		}
 	}
 
 	return (
@@ -63,14 +75,14 @@ function RoomCreator() {
 					<SelectorButton
 						color={"tertiary"}
 						options={gameModeOptions}
-						defaultOptionIdx={1}
+						currentOptionIdx={selectedGameModeIdx}
 						onChange={handleSelectGameMode}
 					></SelectorButton>
 					<p className="py-2 text-2xl">Time Limit:</p>
 					<SelectorButton
 						color={"secondary"}
 						options={timeLimitOptions}
-						defaultOptionIdx={0}
+						currentOptionIdx={selectedTimeLimitIdx}
 						onChange={handleSelectTimeLimit}
 					></SelectorButton>
 					<span className="py-4"></span>

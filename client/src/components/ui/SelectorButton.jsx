@@ -16,7 +16,7 @@ class SelectorOption {
 		return this.description;
 	}
 
-	getEnabled() {
+	isEnabled() {
 		return this.enabled;
 	}
 
@@ -25,13 +25,12 @@ class SelectorOption {
 	}
 }
 
-function SelectorButton({ color, options, defaultOptionIdx, onChange }) {
-	const [selectedOption, setSelectedOption] = useState(defaultOptionIdx);
+function SelectorButton({ color, options, currentOptionIdx, onChange }) {
 	const buttonRef = useRef(null);
 	const optionAmount = options.length;
 
 	function grayOutButton() {
-		if (options[selectedOption].getEnabled() === false) {
+		if (options[currentOptionIdx].isEnabled() === false) {
 			return "opacity-50";
 		}
 	}
@@ -43,33 +42,31 @@ function SelectorButton({ color, options, defaultOptionIdx, onChange }) {
 	};
 
 	function hideDescription() {
-		if (options[selectedOption].getDescription() === "") {
+		if (options[currentOptionIdx].getDescription() === "") {
 			return "hidden";
 		}
 	}
 
 	function changeOption(direction) {
 		if (direction === "left") {
-			setSelectedOption(
-				(prev) => (prev - 1 + optionAmount) % optionAmount,
-			);
+			return (currentOptionIdx - 1 + optionAmount) % optionAmount;
 		} else if (direction === "right") {
-			setSelectedOption((prev) => (prev + 1) % optionAmount);
+			return (currentOptionIdx + 1) % optionAmount;
 		}
-		console.log(options[selectedOption]);
 	}
 
 	function handleClick(e) {
 		const rect = buttonRef.current.getBoundingClientRect();
 		const centerX = rect.left + rect.width / 2;
+		let newOption;
 
 		if (e.clientX < centerX) {
-			changeOption("left");
-			onChange(selectedOption);
+			newOption = changeOption("left");
 		} else {
-			changeOption("right");
-			onChange(selectedOption);
+			newOption = changeOption("right");
 		}
+
+		onChange(newOption);
 	}
 
 	return (
@@ -85,12 +82,12 @@ function SelectorButton({ color, options, defaultOptionIdx, onChange }) {
 
 			<div className="flex flex-col items-center">
 				<h1 className="mx-2 text-3xl font-bold">
-					{options[selectedOption].getName()}
+					{options[currentOptionIdx].getName()}
 				</h1>
 				<h2
 					className={`mt-2 text-xl font-semibold ${hideDescription()}`}
 				>
-					{options[selectedOption].getDescription()}
+					{options[currentOptionIdx].getDescription()}
 				</h2>
 			</div>
 
