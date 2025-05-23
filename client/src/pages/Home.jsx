@@ -7,15 +7,13 @@ import ProfilePicture from "../components/ui/ProfilePicture";
 
 import { DiscordSDKContext } from "../context/DiscordProvider";
 import { setActivity } from "../util/discord/setActivity";
-import { getUser } from "../util/discord/getUser";
 
 function Home() {
 	const navigate = useNavigate();
-	const { discordSDK, auth } = useContext(DiscordSDKContext);
+	const { discordSDK } = useContext(DiscordSDKContext);
 
 	useEffect(() => {
 		setActivity(discordSDK, { state: "In menu" });
-		// getUser(auth);
 	}, [discordSDK]);
 
 	const handleCreateRoom = () => {

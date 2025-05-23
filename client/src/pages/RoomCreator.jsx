@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Background from "../components/ui/Background";
@@ -10,12 +10,16 @@ import BackButton from "../components/ui/BackButton";
 import Modal from "../components/ui/Modal";
 import Button from "../components/ui/Button";
 
+import { DiscordSDKContext } from "../context/DiscordProvider";
+
 import { createRoom } from "../util/socket/emit";
+import { getUserId, getUsername } from "../util/discord/getUserInfo";
 
 function RoomCreator() {
 	const [selectedGameModeIdx, setSelectedGameModeIdx] = useState(0);
 	const [selectedTimeLimitIdx, setSelectedTimeLimitIdx] = useState(0);
 	const navigate = useNavigate();
+	const { auth } = useContext(DiscordSDKContext);
 
 	const gameModeOptions = [
 		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true, 0),
@@ -25,16 +29,11 @@ function RoomCreator() {
 	];
 
 	const timeLimitOptions = [
-		new SelectorOption("Unlimited", "Low stakes", true, Math.),
+		new SelectorOption("Unlimited", "Low stakes", true, "unlimited"),
 		new SelectorOption("3 min", "Easy", true, 60 * 3),
 		new SelectorOption("1 min", "Medium", true, 60),
 		new SelectorOption("30 sec", "Hard", true, 30),
 	];
-
-	useEffect(() => {
-		console.log(`Selected game mode: ${selectedGameModeIdx}`);
-		console.log(`Selected time limit: ${selectedTimeLimitIdx}`);
-	}, [selectedGameModeIdx, selectedTimeLimitIdx]);
 
 	function handleSelectGameMode(selectedOption) {
 		setSelectedGameModeIdx(selectedOption);
@@ -53,6 +52,8 @@ function RoomCreator() {
 				{
 					gameMode: selectedGameMode.getValue(),
 					timeLimit: selectedTimeLimit.getValue(),
+					discordId: getUserId(auth),
+					username: getUsername(auth),
 				},
 				(roomId) => {
 					navigate(`/game/${roomId}`);

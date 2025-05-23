@@ -3,7 +3,7 @@ import { useState, useEffect, useContext, useRef } from "react";
 import { shareMessage } from "../../util/discord/shareMessage";
 import { DiscordSDKContext } from "../../context/DiscordProvider";
 
-function ShareLinkButton({ message }) {
+function ShareLinkButton({ message, className = "" }) {
 	const [copied, setCopied] = useState(false);
 	const [seconds, setSeconds] = useState(0);
 	const { discordSDK } = useContext(DiscordSDKContext);
@@ -59,12 +59,12 @@ function ShareLinkButton({ message }) {
 		<button
 			ref={buttonRef}
 			onClick={handleCopy}
-			className="disabled:opacity-50"
+			className={`disabled:opacity-50 ${className}`}
 		>
 			<div className="flex flex-row items-center justify-center">
 				<img
 					ref={iconRef}
-					className="size-8 select-none max-md:size-5"
+					className={`size-8 select-none max-md:size-12`}
 					src={"/.proxy/icons/share.svg"}
 					alt="Copy"
 					onMouseEnter={() => {

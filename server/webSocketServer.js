@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
 import { createServer } from 'http';
-import { SuperTicTacToe } from './game.js';
+import { Room, User, Player } from './room.js';
 
-// This holds all roomIDs and their corresponding game instance
-const currentGames = new Map();
+// This holds all roomIDs and their corresponding room instance
+const currentRooms = new Map();
 
 /**
  * Generates a unique room ID.
@@ -27,22 +27,27 @@ function generateRoomID() {
 }
 
 function createSocketEndpoints(socket, io) {
-    // DEBUG
+    // TODO: Remove all debug statements
     console.log(`New client connected: ${socket.id}`);
 
-    socket.on('create-room', ({ gameMode, timeLimit }, callback) => {
+    socket.on('create-room', ({ gameMode, timeLimit, discordId, username }, callback) => {
         const roomID = generateRoomID();
+        const room = new Room(roomID, gameMode, timeLimit);
+        room.addPlayer(new Player(discordId, username, 'X'));
+        currentRooms.set(roomID, room);
+
         console.log(`Room created: ${roomID}`);
         console.log(`   Game mode: ${gameMode}`);
         console.log(`   Time limit: ${timeLimit}`);
-        const game = new SuperTicTacToe();
-        currentGames.set(roomID, game);
+        console.log(`   Discord ID: ${discordId}`);
+        console.log(`   Username: ${username}`);
+
         socket.join(roomID);
         callback(roomID);
     });
 
     socket.on('join-room', (roomID, callback) => {
-        if (currentGames.has(roomID)) {
+        if (currentRooms.has(roomID)) {
             socket.join(roomID);
             console.log(`Client joined room: ${roomID}`);
             callback(true);
@@ -54,7 +59,7 @@ function createSocketEndpoints(socket, io) {
 
     socket.on('make-move', (position, boardIndex, callback) => {
         const roomID = Array.from(socket.rooms)[1]; // Get the room ID from the socket's rooms
-        const game = currentGames.get(roomID);
+        const game = currentRooms.get(roomID);
 
         if (game) {
             if (!game.getBoardIndex()){
@@ -72,7 +77,7 @@ function createSocketEndpoints(socket, io) {
 
     socket.on('disconnect', () => {
         console.log(`Client disconnected: ${socket.id}`);
-        console.log(`Current games: ${currentGames.size}`);
+        console.log(`Current games: ${currentRooms.size}`);
     });
 
 }
