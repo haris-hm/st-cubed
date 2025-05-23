@@ -6,6 +6,7 @@ import {
 	SelectorOption,
 	SelectorButton,
 } from "../components/ui/SelectorButton";
+import BackButton from "../components/ui/BackButton";
 import Modal from "../components/ui/Modal";
 import Button from "../components/ui/Button";
 
@@ -52,6 +53,9 @@ function RoomCreator() {
 		<Background>
 			<div className="font-noto-sans text-primary flex min-h-screen items-center justify-center">
 				<Modal>
+					<div className="min-w-1/1 mb-2 flex flex-row items-center justify-start">
+						<BackButton />
+					</div>
 					<h1 className="pb-3 text-4xl font-bold">
 						Lets get started...
 					</h1>

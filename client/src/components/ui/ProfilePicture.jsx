@@ -29,7 +29,7 @@ function ProfilePicture() {
 				desktopSize={40}
 				mobileSize={20}
 				className={
-					"border-6 border-light size-30 z-20 border-solid drop-shadow-2xl hover:cursor-pointer hover:brightness-50 max-md:size-20"
+					"border-6 border-light size-30 z-20 border-solid drop-shadow-2xl hover:cursor-pointer hover:brightness-125 active:brightness-50 max-md:size-20"
 				}
 			/>
 		</div>

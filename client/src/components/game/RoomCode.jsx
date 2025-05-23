@@ -14,7 +14,7 @@ function RoomCode({ roomId }) {
 						<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
 							Share the following code and have your friend join!
 						</h2>
-						<div className="flex flex-row items-center justify-center">
+						<div className="flex flex-row items-center justify-center max-md:flex-col">
 							<h1 className="mt-5 text-5xl font-black max-md:text-2xl">
 								{roomId}
 							</h1>

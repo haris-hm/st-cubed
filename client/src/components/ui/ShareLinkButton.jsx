@@ -78,6 +78,7 @@ function ShareLinkButton({ message }) {
 							iconRef.current.src = "/.proxy/icons/share.svg";
 						}
 					}}
+					draggable="false"
 				></img>
 				<p
 					className={`text-active-text ml-4 text-lg max-md:ml-2 max-md:text-base ${copied && seconds > 0 ? "block" : "hidden"}`}
