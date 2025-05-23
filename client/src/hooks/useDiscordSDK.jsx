@@ -18,7 +18,12 @@ export function useDiscordSDK() {
 				response_type: "code",
 				state: "",
 				prompt: "none",
-				scope: ["identify", "guilds", "applications.commands"],
+				scope: [
+					"identify",
+					"guilds",
+					"applications.commands",
+					"rpc.activities.write",
+				],
 			});
 
 			// Retrieve an access_token from your activity's server

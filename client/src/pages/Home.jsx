@@ -5,10 +5,15 @@ import Button from "../components/ui/Button";
 import Background from "../components/ui/Background";
 
 import { DiscordSDKContext } from "../context/DiscordProvider";
+import { setActivity } from "../util/discord/setActivity";
 
 function Home() {
 	const navigate = useNavigate();
 	const { discordSDK, auth } = useContext(DiscordSDKContext);
+
+	useEffect(() => {
+		setActivity(discordSDK, { state: "In menu" });
+	}, [discordSDK]);
 
 	const handleCreateRoom = () => {
 		navigate("/game/create");
