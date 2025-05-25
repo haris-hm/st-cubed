@@ -3,7 +3,9 @@ import { initSockets } from "../util/socket/initSockets";
 
 // Code from https://alexboots.medium.com/using-react-context-with-socket-io-3b7205c86a6d
 
-const SocketContext = createContext({
+export const SocketContext = createContext({
+	gameStartCountdown: null,
+	gameStarted: false,
 	room: null,
 	boardState: null,
 });

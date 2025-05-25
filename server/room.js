@@ -1,8 +1,9 @@
 import { SuperTicTacToe } from "./game.js";
 
 class User {
-    constructor(discordId, name) {
+    constructor(discordId, socketId, name) {
         this.discordId = discordId;
+        this.socketId = socketId;
         this.username = name;
     }
 
@@ -10,8 +11,21 @@ class User {
         return this.discordId;
     }
 
+    getSocketId() {
+        return this.socketId;
+    }
+
     getUsername() {
         return this.username;
+    }
+
+    /**
+     * Makes a player object out of this user with the given playPiece
+     * @param {string} playPiece - The piece the player will play with (X or O)
+     * @returns {Player} - The player object
+     */
+    getPlayer(playPiece) {
+        return new Player(this.discordId, this.username, playPiece);
     }
 }
 
@@ -31,6 +45,7 @@ class Room {
         this.game = new SuperTicTacToe(gameMode, timeLimit);
         this.players = [];
         this.spectators = [];
+        this.currentTurn = null; // Player who is currently playing
         this.state = 'waiting'; // waiting, playing, finished
     }
 
@@ -48,6 +63,13 @@ class Room {
             return true;
         }
         return false;
+    }
+
+    startGame() {
+        if (this.players.length === 2) {
+            this.state = 'playing';
+            this.currentTurn = this.players[0];
+        }
     }
 
     getPlayerCount() {

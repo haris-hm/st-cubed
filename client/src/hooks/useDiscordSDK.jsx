@@ -26,6 +26,8 @@ export function useDiscordSDK() {
 				],
 			});
 
+			console.log("Authorization code:", code);
+
 			// Retrieve an access_token from your activity's server
 			// Note: We need to prefix our backend `/api/token` route with `/.proxy` to stay compliant with the CSP.
 			// Read more about constructing a full URL and using external resources at

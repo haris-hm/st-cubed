@@ -1,12 +1,17 @@
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Background from "../components/ui/Background";
 import Modal from "../components/ui/Modal";
 import BackButton from "../components/ui/BackButton";
+import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
+
+import { joinRoom } from "../util/socket/emit";
 
 function RoomCreator() {
 	const [roomCode, setRoomCode] = useState(Array(3).fill(""));
+	const navigate = useNavigate();
 	const firstInputRef = useRef(null);
 	const secondInputRef = useRef(null);
 	const thirdInputRef = useRef(null);
@@ -24,19 +29,18 @@ function RoomCreator() {
 
 		// Detect if the input string contains a number
 		const containsNumber = /\d/.test(value);
-
 		if (containsNumber) {
 			// If it contains a number, get rid of the number
 			const newVal = value.replace(/\d/g, "");
 			inputRefs[index].current.value = newVal;
 		}
 
+		newRoomCode[index] = value;
+		setRoomCode(newRoomCode);
+
 		// Set the value of the room code to the value of
 		// the filled in input at a given index
 		if (value.length === 3 && index < roomCode.length - 1) {
-			newRoomCode[index] = value;
-			setRoomCode(newRoomCode);
-
 			inputRefs[index + 1]?.current.focus();
 		} else if (value.length === 0 && index > 0) {
 			inputRefs[index - 1]?.current.focus();
@@ -52,6 +56,12 @@ function RoomCreator() {
 				inputRefs[index - 1]?.current.focus();
 			}
 		}
+	};
+
+	const handleJoinRoom = () => {
+		const roomCodeString = roomCode.join("-");
+		joinRoom(roomCodeString, () => {});
+		navigate(`/game/${roomCodeString}`);
 	};
 
 	return (
@@ -103,6 +113,11 @@ function RoomCreator() {
 							ref={thirdInputRef}
 						/>
 					</div>
+					<Button
+						text={"Join"}
+						color={"primary"}
+						onClick={handleJoinRoom}
+					/>
 				</Modal>
 			</div>
 		</Background>

@@ -38,23 +38,4 @@ app.post("/api/token", async (req, res) => {
   res.send({ access_token });
 });
 
-app.get("/api/user", async (req, res) => {
-  const accessToken = req.headers.accessToken;
-  console.log("Access Token:", accessToken);
-  if (!accessToken) {
-    return res.status(401).json({ error: "No access token provided" });
-  }
-
-  const response = await fetch(`https://discord.com/api/v10/users/@me/`, {
-		headers: {
-			// NOTE: we're using the access_token provided by the "authenticate" command
-			Authorization: `Bearer ${accessToken}`,
-			"Content-Type": "application/json",
-		},
-	})
-
-  const data = await response.json();
-  res.status(response.status).json(data);
-});
-
 export { app };
