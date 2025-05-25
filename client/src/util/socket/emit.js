@@ -35,6 +35,10 @@ export const joinRoom = (roomID, callback) => {
 	socket.emit("join-room", { roomID }, callback);
 };
 
+export const validateRoomID = (roomID, callback) => {
+	socket.emit("validate-room-id", { roomID }, callback);
+};
+
 export const makeMove = (boardIndex, position, callback) => {
 	socket.emit("make-move", boardIndex, position, callback);
 };

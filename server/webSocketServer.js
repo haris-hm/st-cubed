@@ -101,6 +101,15 @@ function joinRoom(socket, io, { roomID }, callback) {
     console.log(`Client joined room: ${roomID}`);
 }
 
+function validateRoomID(socket, io, { roomID }, callback) {
+    const room = currentRooms.get(roomID);
+    if (room) {
+        callback(true);
+    }
+    
+    callback(false);
+}
+
 function createSocketEndpoints(socket, io) {
     // TODO: Remove all debug statements
     console.log(`New client connected: ${socket.id}`);
@@ -115,6 +124,10 @@ function createSocketEndpoints(socket, io) {
 
     socket.on('join-room', (data, callback = () => {}) => {
         joinRoom(socket, io, data, callback);
+    });
+
+    socket.on('validate-room-id', (data, callback) => {
+        validateRoomID(socket, io, data, callback);
     });
 
     socket.on('make-move', (position, boardIndex, callback) => {

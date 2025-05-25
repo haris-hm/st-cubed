@@ -7,21 +7,27 @@ import BackButton from "../components/ui/BackButton";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 
-import { joinRoom } from "../util/socket/emit";
+import { joinRoom, validateRoomID } from "../util/socket/emit";
 
 function RoomCreator() {
 	const [roomCode, setRoomCode] = useState(Array(3).fill(""));
+	const [validCode, setValidCode] = useState(null);
 	const navigate = useNavigate();
 	const firstInputRef = useRef(null);
 	const secondInputRef = useRef(null);
 	const thirdInputRef = useRef(null);
+	const errorMessageRef = useRef(null);
 
 	const inputRefs = [firstInputRef, secondInputRef, thirdInputRef];
 
 	useEffect(() => {
 		// Focus on the first input when the component mounts
 		firstInputRef?.current?.focus();
-	}, [firstInputRef]);
+
+		if (!validCode && validCode !== null) {
+			errorMessageRef?.current?.classList.remove("hidden");
+		}
+	}, [firstInputRef, validCode]);
 
 	const handleInputChange = (index) => {
 		const newRoomCode = [...roomCode];
@@ -60,8 +66,17 @@ function RoomCreator() {
 
 	const handleJoinRoom = () => {
 		const roomCodeString = roomCode.join("-");
-		joinRoom(roomCodeString, () => {});
-		navigate(`/game/${roomCodeString}`);
+
+		const handleValidation = (isValid) => {
+			setValidCode(isValid);
+		};
+
+		validateRoomID(roomCodeString, handleValidation);
+
+		if (validCode) {
+			joinRoom(roomCodeString, () => {});
+			navigate(`/game/${roomCodeString}`);
+		}
 	};
 
 	return (
@@ -113,11 +128,19 @@ function RoomCreator() {
 							ref={thirdInputRef}
 						/>
 					</div>
+
 					<Button
 						text={"Join"}
 						color={"primary"}
 						onClick={handleJoinRoom}
+						className="mt-4"
 					/>
+					<p
+						className="text-secondary mt-4 hidden text-center text-xl max-md:text-lg"
+						ref={errorMessageRef}
+					>
+						Looks like that code is invalid. Please try again.
+					</p>
 				</Modal>
 			</div>
 		</Background>
