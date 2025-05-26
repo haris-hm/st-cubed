@@ -2,7 +2,12 @@ import { Server } from "socket.io";
 import { createServer } from "http";
 
 import logger from "../models/logger.js";
-import { registerUser, createRoom, joinRoom } from "./socket/events.js";
+import {
+	registerUser,
+	createRoom,
+	joinRoom,
+	validateRoomID,
+} from "./socket/events.js";
 
 // This holds all socketIds and their corresponding room instance
 const CURRENT_ROOMS = new Map();
@@ -33,6 +38,10 @@ function createSocketEndpoints(socket, io) {
 
 	socket.on("join-room", (data, callback = () => {}) => {
 		joinRoom(context, data, callback);
+	});
+
+	socket.on("validate-room-id", (data, callback) => {
+		validateRoomID(context, data, callback);
 	});
 
 	socket.on("disconnect", () => {

@@ -1,3 +1,14 @@
+/**
+ * A component which defines the main button style used in the application.
+ *
+ * @param {Object} props - The props for the Button component.
+ * @param {string} props.text - The text to display on the button.
+ * @param {string} props.color - The custom Tailwind theme which defines the colors of the button.
+ * @param {Function} props.onClick - The function to call when the button is clicked.
+ * @param {string} [props.className] - Additional class names to apply to the button. Default is an empty string.
+ *
+ * @returns {JSX.Element} The rendered button component.
+ */
 function Button({ text, color, onClick, className = "" }) {
 	const colorClasses = {
 		primary:

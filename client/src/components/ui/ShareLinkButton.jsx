@@ -1,8 +1,17 @@
 import { useState, useEffect, useContext, useRef } from "react";
 
 import { shareMessage } from "../../util/discord/shareMessage";
-import { DiscordSDKContext } from "../../context/DiscordProvider";
+import { DiscordSDKContext } from "../../context/Context";
 
+/**
+ * ShareLinkButton component allows users to share a message via Discord.
+ *
+ * @param {Object} props - The props for the ShareLinkButton component.
+ * @param {string} props.message - The message to share in the specified Discord channel.
+ * @param {string} props.className - Optional field for additional CSS classes to apply to the button.
+ *
+ * @returns {JSX.Element} A button that allows users to share a message in a Discord channel.
+ */
 function ShareLinkButton({ message, className = "" }) {
 	const [copied, setCopied] = useState(false);
 	const [seconds, setSeconds] = useState(0);

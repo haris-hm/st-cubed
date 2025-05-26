@@ -102,6 +102,7 @@ function createRoom(
 }
 
 /**
+ * Event to join an existing room.
  *
  * @param {Object} context Context object containing shared resources.
  * @param {Socket} context.socket The socket object for the current connection.
@@ -142,4 +143,25 @@ function joinRoom(
 	logger.info({ roomID, roomID }, "Client joined room");
 }
 
-export { registerUser, createRoom, joinRoom };
+/**
+ * Valudate if a room ID is valid by checking if it exists in the currentRooms map.
+ *
+ * @param {Object} context
+ * @param {Map<string, Room>} context.currentRooms Map to store information about currently active rooms.
+ *
+ * @param {Object} data The data sent from the client.
+ * @param {string} data.roomID The ID of the room to validate.
+ *
+ * @param {Function} callback A required function that will be called with a boolean indicating whether the room ID is valid.
+ */
+function validateRoomID({ currentRooms }, { roomID }, callback) {
+	const room = currentRooms.get(roomID);
+
+	if (room) {
+		callback(true);
+	}
+
+	callback(false);
+}
+
+export { registerUser, createRoom, joinRoom, validateRoomID };

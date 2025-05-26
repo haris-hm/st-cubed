@@ -9,7 +9,12 @@ import Input from "../components/ui/Input";
 
 import { joinRoom, validateRoomID } from "../util/socket/emit";
 
-function RoomCreator() {
+/**
+ * Renders a page component that allows users to join a room by entering a room code.
+ *
+ * @returns {JSX.Element} The RoomJoiner page component.
+ */
+function RoomJoiner() {
 	const [roomCode, setRoomCode] = useState(Array(3).fill(""));
 	const [validCode, setValidCode] = useState(null);
 	const navigate = useNavigate();
@@ -24,36 +29,49 @@ function RoomCreator() {
 		// Focus on the first input when the component mounts
 		firstInputRef?.current?.focus();
 
+		// Display an error message if the room code is invalid
 		if (!validCode && validCode !== null) {
 			errorMessageRef?.current?.classList.remove("hidden");
+		} else if (validCode) {
+			errorMessageRef?.current?.classList.add("hidden");
 		}
 	}, [firstInputRef, validCode]);
 
-	const handleInputChange = (index) => {
+	/**
+	 * Handles the change event for the three room code input fields.
+	 *
+	 * @param {number} index - The index of the input field reference being changed.
+	 */
+	function handleInputChange(index) {
 		const newRoomCode = [...roomCode];
 		const value = inputRefs[index]?.current.value;
 
-		// Detect if the input string contains a number
-		const containsNumber = /\d/.test(value);
-		if (containsNumber) {
-			// If it contains a number, get rid of the number
-			const newVal = value.replace(/\d/g, "");
+		// Remove any non-alphabetic characters from the input as they're typed in
+		const containsNonAlphabetic = /[^a-zA-Z]/.test(value);
+		if (containsNonAlphabetic) {
+			const newVal = value.replace(/[^a-zA-Z]/g, "");
 			inputRefs[index].current.value = newVal;
 		}
 
 		newRoomCode[index] = value;
 		setRoomCode(newRoomCode);
 
-		// Set the value of the room code to the value of
-		// the filled in input at a given index
+		/* Set the value of the room code to the value of
+		 * the filled in input at a given index
+		 */
 		if (value.length === 3 && index < roomCode.length - 1) {
 			inputRefs[index + 1]?.current.focus();
 		} else if (value.length === 0 && index > 0) {
 			inputRefs[index - 1]?.current.focus();
 		}
-	};
+	}
 
-	const handleFocus = (index) => {
+	/**
+	 * Handles refocusing on the previous input field when the first input field is still empty.
+	 *
+	 * @param {number} index - The index of the input field reference being focused.
+	 */
+	function handleFocus(index) {
 		const value = inputRefs[index]?.current.value;
 
 		// Focus on the previous input if the current input is empty
@@ -62,10 +80,17 @@ function RoomCreator() {
 				inputRefs[index - 1]?.current.focus();
 			}
 		}
-	};
+	}
 
-	const handleJoinRoom = () => {
-		const roomCodeString = roomCode.join("-");
+	/**
+	 * Handles the join room button click event. Navigates the user to the game page
+	 * if the room code is valid, otherwise displays an error message.
+	 */
+	function handleJoinRoom() {
+		const roomCodeLowercase = [...roomCode].map((code) =>
+			code.toLowerCase(),
+		);
+		const roomCodeString = roomCodeLowercase.join("-");
 
 		const handleValidation = (isValid) => {
 			setValidCode(isValid);
@@ -77,7 +102,7 @@ function RoomCreator() {
 			joinRoom(roomCodeString, () => {});
 			navigate(`/game/${roomCodeString}`);
 		}
-	};
+	}
 
 	return (
 		<Background>
@@ -147,4 +172,4 @@ function RoomCreator() {
 	);
 }
 
-export default RoomCreator;
+export default RoomJoiner;

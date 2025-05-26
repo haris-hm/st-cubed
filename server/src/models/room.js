@@ -9,7 +9,7 @@ import { SuperTicTacToe } from "./game.js";
  * @returns {string} A unique room ID.
  */
 function generateRoomID() {
-	const letters = "BCDFGHJKLMNPQRSTVWXYZ";
+	const letters = "bcdfghjklmnpqrstvwxyz";
 	const start = letters.charAt(Math.floor(Math.random() * letters.length));
 	const end = [];
 

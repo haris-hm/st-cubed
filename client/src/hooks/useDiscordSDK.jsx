@@ -1,12 +1,29 @@
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, useRef } from "react";
 import { DiscordSDK } from "@discord/embedded-app-sdk";
 
-export function useDiscordSDK() {
+/**
+ * @typedef {Object} DiscordInfo
+ * @property {DiscordSDK | null} discordSDK - The Discord SDK instance.
+ * @property {Object | null} auth The authentication details.
+ * @property {boolean} fetching Indicates whether the SDK is still being fetched.
+ */
+
+/**
+ * Custom hook to initialize the Discord SDK and authenticate the user.
+ *
+ * @returns {DiscordInfo} An object containing the Discord SDK instance, authentication details, and a fetching state.
+ */
+function useDiscordSDK() {
 	const [discordSDK, setDiscordSDK] = useState(null);
 	const [auth, setAuth] = useState(null);
 	const [fetching, setFetching] = useState(true);
+	const hasRun = useRef(false);
 
 	useEffect(() => {
+		// Prevent multiple initializations
+		if (hasRun.current) return;
+		hasRun.current = true;
+
 		const sdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
 
 		async function setup() {
@@ -62,3 +79,5 @@ export function useDiscordSDK() {
 
 	return { discordSDK, auth, fetching };
 }
+
+export { useDiscordSDK };

@@ -10,22 +10,29 @@ import BackButton from "../components/ui/BackButton";
 import Modal from "../components/ui/Modal";
 import Button from "../components/ui/Button";
 
-import { DiscordSDKContext } from "../context/DiscordProvider";
+import { DiscordSDKContext } from "../context/Context";
 
 import { createRoom } from "../util/socket/emit";
 import { getUserId, getUsername } from "../util/discord/getUserInfo";
 
+/**
+ * Renders a page component which allows the user to create a game room. The
+ * user can select a game mode and a time limit before starting the game.
+ *
+ * @returns {JSX.Element} The RoomCreator page component.
+ */
 function RoomCreator() {
 	const [selectedGameModeIdx, setSelectedGameModeIdx] = useState(0);
 	const [selectedTimeLimitIdx, setSelectedTimeLimitIdx] = useState(0);
 	const navigate = useNavigate();
 	const { auth } = useContext(DiscordSDKContext);
 
+	// Define the game modes and time limits as options for the selector buttons
 	const gameModeOptions = [
 		new SelectorOption("Classic", "Tic-Tac-Toe-Ception", true, 0),
 		new SelectorOption("Campaign", "Coming soon", false, 1),
 		new SelectorOption("Speedrun", "Coming soon", false, 2),
-		new SelectorOption("Basic", "Coming soon", false, 3), // Set description to "Timeless classic" when implemented
+		new SelectorOption("Basic", "Coming soon", false, 3), // TODO: Set description to "Timeless classic" when implemented
 	];
 
 	const timeLimitOptions = [
@@ -35,6 +42,7 @@ function RoomCreator() {
 		new SelectorOption("30 sec", "Hard", true, 30),
 	];
 
+	// Handlers for the selector buttons to update the selected indices
 	function handleSelectGameMode(selectedOption) {
 		setSelectedGameModeIdx(selectedOption);
 	}
@@ -43,6 +51,12 @@ function RoomCreator() {
 		setSelectedTimeLimitIdx(selectedOption);
 	}
 
+	/**
+	 * Handles the play button click event. It checks if the selected game mode
+	 * and time limit are enabled, and if so, it creates a room with the selected
+	 * options and navigates to the game page. If not enabled, an error message is
+	 * displayed to the user.
+	 */
 	function handlePlay() {
 		const selectedGameMode = gameModeOptions[selectedGameModeIdx];
 		const selectedTimeLimit = timeLimitOptions[selectedTimeLimitIdx];

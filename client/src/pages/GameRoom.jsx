@@ -1,14 +1,19 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import RoomCode from "../components/game/RoomCode";
+import Background from "../components/ui/Background";
 
-import { SocketContext } from "../context/SocketProvider";
+import { SocketContext } from "../context/Context";
 
+/**
+ * Renders a GameRoom page component. Game logic still needs to be implemented.
+ *
+ * @returns {JSX.Element} The GameRoom page component.
+ */
 function GameRoom() {
 	const { roomId } = useParams();
 	const { gameStarted, gameStartCountdown } = useContext(SocketContext);
-	// const [waitingForPlayers, setWaitingForPlayers] = useState(true);
 
 	if (!gameStarted) {
 		return (
@@ -16,13 +21,7 @@ function GameRoom() {
 		);
 	}
 
-	return (
-		<div>
-			<h1>Game Room</h1>
-			<p>Room ID: {roomId}</p>
-			<p>Waiting for players...</p>
-		</div>
-	);
+	return <Background></Background>;
 }
 
 export default GameRoom;

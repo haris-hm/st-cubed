@@ -2,8 +2,13 @@ import { useContext } from "react";
 
 import Avatar from "./Avatar";
 
-import { DiscordSDKContext } from "../../context/DiscordProvider";
+import { DiscordSDKContext } from "../../context/Context";
 
+/**
+ * ProfilePicture component displays the user's profile picture and username.
+ *
+ * @returns {JSX.Element | null} A JSX element representing the user's profile picture and username, or null if user data is not available.
+ */
 function ProfilePicture() {
 	const { auth } = useContext(DiscordSDKContext);
 
@@ -11,6 +16,7 @@ function ProfilePicture() {
 	const avatarHash = auth?.user?.avatar;
 	const username = auth?.user?.username;
 
+	// TODO: Handle cases where user data is not available. Display a placeholder or error message.
 	if (!userId || !avatarHash || !username) {
 		console.error("User data is not available");
 		return null;

@@ -4,14 +4,18 @@ import { Router } from "./pages/Router";
 
 import { useDiscordSDK } from "./hooks/useDiscordSDK";
 
-import "./styles/input.css";
-
+/**
+ * Main application component that sets up the context providers for Discord and Socket
+ * and wraps the entire application within them.
+ *
+ * @returns {JSX.Element}
+ */
 function App() {
-	const discordSDK = useDiscordSDK();
+	const discordInfo = useDiscordSDK();
 
 	return (
 		<SocketProvider>
-			<DiscordProvider value={discordSDK}>
+			<DiscordProvider discordInfo={discordInfo}>
 				<Router />
 			</DiscordProvider>
 		</SocketProvider>

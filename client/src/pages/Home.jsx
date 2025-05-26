@@ -5,9 +5,16 @@ import Button from "../components/ui/Button";
 import Background from "../components/ui/Background";
 import ProfilePicture from "../components/ui/ProfilePicture";
 
-import { DiscordSDKContext } from "../context/DiscordProvider";
+import { DiscordSDKContext } from "../context/Context";
 import { setActivity } from "../util/discord/setActivity";
 
+/**
+ * Renders a Home page component, rendering the logo and buttons which
+ * allow the user to create a game room or join an existing game. Buttons
+ * navigate the user to their respective pages.
+ *
+ * @returns {JSX.Element} The Home page component.
+ */
 function Home() {
 	const navigate = useNavigate();
 	const { discordSDK } = useContext(DiscordSDKContext);

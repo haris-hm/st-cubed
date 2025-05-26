@@ -1,5 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Handles naviating the user to the previous page they were on.
+ * @returns {JSX.Element} Rendered BackButton component.
+ */
 function BackButton() {
 	const navigate = useNavigate();
 

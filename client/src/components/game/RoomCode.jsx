@@ -4,10 +4,39 @@ import Background from "../ui/Background";
 import Modal from "../ui/Modal";
 import ShareLinkButton from "../ui/ShareLinkButton";
 
+/**
+ * Displays the room code to the user so they can share it with a friend.
+ * Provides a {@link ShareLinkButton} to share the room code to a Discord channel
+ * or DM. When the game start countdown starts, it switches to displaying the
+ * value of the countdown.
+ *
+ * @param {Object} props - The props for the RoomCode component.
+ * @param {string} props.roomId - The ID of the room.
+ * @param {number} props.countdown - The current value of the countdown timer in seconds.
+ *
+ * @returns {JSX.Element} - The rendered RoomCode component.
+ */
 function RoomCode({ roomId, countdown }) {
 	const shareRef = useRef(null);
 	const countdownRef = useRef(null);
 
+	/**
+	 * Capitalizes the first letter of each word in a string, where words are
+	 * separated by hyphens. Used to format the room ID for display.
+	 *
+	 * @param {string} string - The string which is separated by hyphens.
+	 *
+	 * @returns {string} The formatted string.
+	 */
+	function capitalizeFirstLetters(string) {
+		const words = string.split("-");
+		return words
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join("-");
+	}
+
+	/* Toggles visibility of the countdown and the room code, depending on
+	 * the state of the countdown */
 	useEffect(() => {
 		if (countdown) {
 			shareRef.current.classList.add("hidden");
@@ -33,11 +62,11 @@ function RoomCode({ roomId, countdown }) {
 							</h2>
 							<div className="flex flex-row items-center justify-center max-md:flex-col">
 								<h1 className="mt-5 text-5xl font-black max-md:text-3xl">
-									{roomId}
+									{capitalizeFirstLetters(roomId)}
 								</h1>
 								<div className="mt-7 max-md:mt-5 md:ml-4">
 									<ShareLinkButton
-										message={`Come play Super Tic-Tac-Toe with me!\n\nJoin Code: ${roomId}`}
+										message={`Come play Super Tic-Tac-Toe with me!\n\nJoin Code: ${capitalizeFirstLetters(roomId)}`}
 									></ShareLinkButton>
 								</div>
 							</div>

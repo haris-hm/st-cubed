@@ -3,34 +3,42 @@ import { useState, useEffect } from "react";
 import Background from "./Background";
 import Modal from "./Modal";
 
+/**
+ * A loading component that displays a spinner and a random message.
+ *
+ * @returns The rendered loading component.
+ */
 function Loading() {
 	const [dots, setDots] = useState(1);
 	const [randomMessage, setRandomMessage] = useState("");
-	//TODO: Add more funny splash texts
-	const splashTexts = [
-		"Loading",
-		"Please wait",
-		"Almost there",
-		"Playing fetch",
-		"Preparing your experience",
-		"Setting things up",
-		"Hang tight",
-		"Just a moment",
-		"Loading your content",
-		"Loading resources",
-		"Loading assets",
-		"Setting up a Minecraft server",
-		"Loading the universe",
-		"Loading the multiverse",
-		"Deleting Herobrine",
-		"Cleaning things up",
-		"Reticulating splines",
-		"Refactoring code",
-		"Compiling code",
-		"Screaming at the computer",
-	];
 
+	// Display a random message and animate the loading dots to fill in every 500ms
 	useEffect(() => {
+		//TODO: Add more funny splash texts
+		//TODO: Move this to an API call to allow for more dynamic messages
+		const splashTexts = [
+			"Loading",
+			"Please wait",
+			"Almost there",
+			"Playing fetch",
+			"Preparing your experience",
+			"Setting things up",
+			"Hang tight",
+			"Just a moment",
+			"Loading your content",
+			"Loading resources",
+			"Loading assets",
+			"Setting up a Minecraft server",
+			"Loading the universe",
+			"Loading the multiverse",
+			"Deleting Herobrine",
+			"Cleaning things up",
+			"Reticulating splines",
+			"Refactoring code",
+			"Compiling code",
+			"Screaming at the computer",
+		];
+
 		setRandomMessage(
 			splashTexts[Math.floor(Math.random() * splashTexts.length)],
 		);

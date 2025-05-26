@@ -7,12 +7,21 @@ import RoomJoiner from "./RoomJoiner";
 import GameRoom from "./GameRoom";
 import Loading from "../components/ui/Loading";
 
-import { DiscordSDKContext } from "../context/DiscordProvider";
+import { DiscordSDKContext } from "../context/Context";
 
-export function Router() {
+/**
+ * Utilizes React Router to define the main application routes.
+ *
+ * @returns {JSX.Element} The main router component that handles navigation between pages.
+ */
+function Router() {
 	const { fetching } = useContext(DiscordSDKContext);
 
-	// Show a loading state until both are ready
+	/*
+	 * Show a loading state until the discord SDK context is ready
+	 * This is necessary to ensure that the Discord SDK is fully initialized
+	 * as several components depend on it for rendering.
+	 */
 	if (fetching) {
 		return <Loading />;
 	}
@@ -29,3 +38,5 @@ export function Router() {
 		</BrowserRouter>
 	);
 }
+
+export { Router };
