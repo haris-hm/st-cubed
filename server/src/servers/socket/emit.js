@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 
+import logger from "../../models/logger.js";
 import { Room } from "../../models/room.js";
 
 const START_COUNTDOWN_LENGTH = 10;
@@ -21,12 +22,13 @@ function emitGameStartSequence({ io, currentRooms, roomID }) {
 			clearInterval(emissionInterval);
 			io.to(roomID).emit("start-game");
 			room.startGame();
+			logger.info(`Game started in room ${roomID}`);
 		}
 
 		io.to(roomID).emit("update-start-countdown", {
 			gameStartCountdown: countdown,
 		});
-		console.log(`Countdown: ${countdown}`);
+
 		countdown--;
 	}, 1000);
 }

@@ -103,7 +103,11 @@ function createRoom(
  *
  * @param {Function} callback A function that will be called with a boolean indicating success or failure when adding the user to the room.
  */
-function joinRoom({ socket, io, currentRooms }, { roomID }, callback) {
+function joinRoom(
+	{ socket, io, currentRooms, currentUsers },
+	{ roomID },
+	callback,
+) {
 	if (!roomID) {
 		logger.error(roomID, "Unspecified roomID");
 		callback(false);

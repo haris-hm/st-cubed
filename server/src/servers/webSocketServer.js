@@ -5,18 +5,18 @@ import logger from "../models/logger.js";
 import { registerUser, createRoom, joinRoom } from "./socket/events.js";
 
 // This holds all socketIds and their corresponding room instance
-const currentRooms = new Map();
+const CURRENT_ROOMS = new Map();
 // This holds all socketIds and their corresponding user instance
-const currentUsers = new Map();
+const CURRENT_USERS = new Map();
 
 function createSocketEndpoints(socket, io) {
 	logger.info(`New client connected to websocket: ${socket.id}`);
 
 	const context = {
-		socket,
-		io,
-		currentRooms,
-		currentUsers,
+		socket: socket,
+		io: io,
+		currentRooms: CURRENT_ROOMS,
+		currentUsers: CURRENT_USERS,
 	};
 
 	socket.on("register-user", (data, callback = null) => {
