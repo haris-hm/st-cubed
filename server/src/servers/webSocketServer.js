@@ -10,7 +10,7 @@ const CURRENT_ROOMS = new Map();
 const CURRENT_USERS = new Map();
 
 function createSocketEndpoints(socket, io) {
-	logger.info(`New client connected to websocket: ${socket.id}`);
+	logger.info({ socketID: socket.id }, "New client connected to websocket");
 
 	const context = {
 		socket: socket,
@@ -36,7 +36,10 @@ function createSocketEndpoints(socket, io) {
 	});
 
 	socket.on("disconnect", () => {
-		logger.info(`Client disconnected from websocket: ${socket.id}`);
+		logger.info(
+			{ socketID: socket.id },
+			"Client disconnected from websocket",
+		);
 	});
 }
 

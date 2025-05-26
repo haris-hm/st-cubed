@@ -24,7 +24,10 @@ function registerUser(
 	callback = () => {},
 ) {
 	if (!discordId || !username) {
-		logger.error({ discordId, username }, `Invalid user data`);
+		logger.error(
+			{ userID: discordId, username: username },
+			"Invalid user data",
+		);
 		callback(false);
 		return;
 	}
@@ -64,10 +67,10 @@ function createRoom(
 	) {
 		logger.error(
 			{
-				gameMode,
-				timeLimit,
-				discordId,
-				username,
+				gameMode: gameMode,
+				timeLimit: timeLimit,
+				userID: discordId,
+				username: username,
 			},
 			"Invalid room data:",
 		);
@@ -85,7 +88,14 @@ function createRoom(
 	currentRooms.set(roomID, room);
 
 	logger.info(
-		`Room created (ID: ${roomID}) by user ${username} (ID: ${discordId}), gameMode: ${gameMode}, timeLimit: ${timeLimit}${timeLimit === "unlimited" ? "" : " seconds"}`,
+		{
+			roomID: roomID,
+			userID: discordId,
+			username: username,
+			gameMode: gameMode,
+			timeLimit: `${timeLimit}${timeLimit === "unlimited" ? "" : " seconds"}`,
+		},
+		`Room created by user ${username}`,
 	);
 
 	callback(roomID);
@@ -109,7 +119,7 @@ function joinRoom(
 	callback,
 ) {
 	if (!roomID) {
-		logger.error(roomID, "Unspecified roomID");
+		logger.error({ roomID: roomID }, "Unspecified roomID");
 		callback(false);
 		return;
 	}
@@ -119,7 +129,7 @@ function joinRoom(
 	const room = currentRooms.get(roomID);
 
 	if (!room) {
-		logger.error(roomID, "Room not found");
+		logger.error({ roomID: roomID }, "Room not found");
 		callback(false);
 	}
 
@@ -129,7 +139,7 @@ function joinRoom(
 	callback(true);
 	emitGameStartSequence({ io, currentRooms, roomID });
 
-	logger.info(`Client joined room: ${roomID}`);
+	logger.info({ roomID, roomID }, "Client joined room");
 }
 
 export { registerUser, createRoom, joinRoom };

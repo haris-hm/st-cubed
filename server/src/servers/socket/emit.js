@@ -22,7 +22,7 @@ function emitGameStartSequence({ io, currentRooms, roomID }) {
 			clearInterval(emissionInterval);
 			io.to(roomID).emit("start-game");
 			room.startGame();
-			logger.info(`Game started in room ${roomID}`);
+			logger.info({ roomID: roomID }, "Game started");
 		}
 
 		io.to(roomID).emit("update-start-countdown", {
