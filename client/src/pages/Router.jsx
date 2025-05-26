@@ -1,11 +1,8 @@
 import { useContext } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./Home";
-import RoomCreator from "./RoomCreator";
-import RoomJoiner from "./RoomJoiner";
-import GameRoom from "./GameRoom";
-import Loading from "../components/ui/Loading";
+import { GameRoom, Home, RoomCreator, RoomJoiner } from "./";
+import { Loading } from "../components/ui";
 
 import { DiscordSDKContext } from "../context/Context";
 
@@ -39,4 +36,4 @@ function Router() {
 	);
 }
 
-export { Router };
+export default Router;

@@ -1,14 +1,14 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Background from "../components/ui/Background";
 import {
-	SelectorOption,
+	BackButton,
+	Background,
+	Button,
+	Modal,
 	SelectorButton,
-} from "../components/ui/SelectorButton";
-import BackButton from "../components/ui/BackButton";
-import Modal from "../components/ui/Modal";
-import Button from "../components/ui/Button";
+	SelectorOption,
+} from "../components/ui";
 
 import { DiscordSDKContext } from "../context/Context";
 

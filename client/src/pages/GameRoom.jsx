@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import RoomCode from "../components/game/RoomCode";
-import Background from "../components/ui/Background";
+import { RoomCode } from "../components/game";
+import { Background } from "../components/ui";
 
 import { SocketContext } from "../context/Context";
 

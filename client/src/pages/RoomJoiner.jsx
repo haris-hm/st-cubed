@@ -1,11 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Background from "../components/ui/Background";
-import Modal from "../components/ui/Modal";
-import BackButton from "../components/ui/BackButton";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
+import { BackButton, Background, Button, Input, Modal } from "../components/ui";
 
 import { joinRoom, validateRoomID } from "../util/socket/emit";
 

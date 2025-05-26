@@ -1,6 +1,6 @@
 import DiscordProvider from "./context/DiscordProvider";
 import SocketProvider from "./context/SocketProvider";
-import { Router } from "./pages/Router";
+import { Router } from "./pages";
 
 import { useDiscordSDK } from "./hooks/useDiscordSDK";
 

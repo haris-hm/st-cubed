@@ -1,9 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../components/ui/Button";
-import Background from "../components/ui/Background";
-import ProfilePicture from "../components/ui/ProfilePicture";
+import { Button, Background, ProfilePicture } from "../components/ui";
 
 import { DiscordSDKContext } from "../context/Context";
 import { setActivity } from "../util/discord/setActivity";
