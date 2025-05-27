@@ -1,6 +1,7 @@
 import pino from "pino";
 import path from "path";
 import { fileURLToPath } from "url";
+import { mkdir } from "fs";
 
 function getLogFilePath(filePrefix) {
 	// Get the current file's directory
@@ -8,7 +9,7 @@ function getLogFilePath(filePrefix) {
 	const __dirname = path.dirname(__filename);
 
 	// Go up two levels to reach the project root from server/src/models/logger.js
-	const projectRoot = path.resolve(__dirname, "../../../");
+	const projectRoot = path.resolve(__dirname, "../../");
 
 	// Generate a timestamped log file name
 	const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -23,7 +24,7 @@ const transport = pino.transport({
 		// Log to a file in the logs directory
 		{
 			target: "pino/file",
-			options: { destination: getLogFilePath("server") },
+			options: { destination: getLogFilePath("server"), mkdir: true },
 		},
 		// Also log to the console
 		{

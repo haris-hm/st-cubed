@@ -104,17 +104,17 @@ function RoomJoiner() {
 		<Background>
 			<div className="font-noto-sans text-primary min-w-screen flex min-h-screen items-center justify-center">
 				<Modal className="max-w-1/2 max-md:max-w-8/10">
-					<div className="min-w-1/1 mb-2 flex flex-row items-center justify-start max-sm:flex-col">
+					<div className="mb-2 flex min-w-full flex-row items-center justify-start max-md:justify-center">
 						<BackButton />
 					</div>
-					<h1 className="pb-3 text-4xl font-bold max-md:text-2xl">
+					<h1 className="pb-3 text-5xl font-semibold max-md:text-3xl">
 						Lets join a friend!
 					</h1>
-					<p className="text-active-text pb-4 text-2xl max-md:text-xl">
+					<p className="text-active-text text-2xl font-medium max-md:text-lg">
 						Enter the code your friend shared to join their game.
 					</p>
 
-					<div className="flex flex-row items-center justify-center text-4xl max-md:text-2xl">
+					<div className="mt-7 flex flex-row items-center justify-center text-4xl max-md:mt-5 max-md:text-2xl">
 						<Input
 							type={"text"}
 							placeholder={"Tic"}
@@ -154,7 +154,7 @@ function RoomJoiner() {
 						text={"Join"}
 						color={"primary"}
 						onClick={handleJoinRoom}
-						className="mt-4"
+						className="mt-7 max-md:mt-5"
 					/>
 					<p
 						className="text-secondary mt-4 hidden text-center text-xl max-md:text-lg"

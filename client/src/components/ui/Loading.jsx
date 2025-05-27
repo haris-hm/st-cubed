@@ -52,7 +52,7 @@ function Loading() {
 
 	return (
 		<Background>
-			<div className="flex min-h-screen items-center justify-center">
+			<div className="flex min-h-full items-center justify-center">
 				<Modal>
 					<span className="invisible">
 						<p className="text-dark mt-4 text-2xl">

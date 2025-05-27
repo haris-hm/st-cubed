@@ -73,7 +73,7 @@ function RoomCode({ roomId, countdown }) {
 						</div>
 						<div ref={countdownRef}>
 							<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
-								Game started
+								Second player joined!
 							</h1>
 							<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
 								Starting in {countdown} seconds...

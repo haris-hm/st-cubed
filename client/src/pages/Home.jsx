@@ -32,36 +32,34 @@ function Home() {
 	return (
 		<Background>
 			<ProfilePicture />
-			<div className="grid min-h-screen">
-				<div className="flex flex-col items-center justify-center">
-					<img
-						src="/.proxy/logos/full-st3-alt.svg"
-						alt="Super Tic-Tac-Toe"
-						className="max-w-4/10 drop-shadow-dark select-none drop-shadow-xl max-md:hidden"
-						draggable="false"
-					/>
-					<img
-						src="/.proxy/logos/full-st3-alt-mobile.svg"
-						alt="Super Tic-Tac-Toe"
-						className="max-w-6/10 drop-shadow-dark select-none drop-shadow-xl md:hidden"
-						draggable="false"
-					/>
+			<div className="flex min-h-full flex-col items-center justify-center">
+				<img
+					src="/.proxy/logos/full-st3-alt.svg"
+					alt="Super Tic-Tac-Toe"
+					className="max-w-4/10 drop-shadow-dark select-none drop-shadow-xl max-md:hidden"
+					draggable="false"
+				/>
+				<img
+					src="/.proxy/logos/full-st3-alt-mobile.svg"
+					alt="Super Tic-Tac-Toe"
+					className="max-w-6/10 drop-shadow-dark select-none drop-shadow-xl md:hidden"
+					draggable="false"
+				/>
 
-					<div className="min-w-1/2 drop-shadow-dark max-md:min-w-8/10 my-12 flex flex-row items-center justify-center drop-shadow-lg max-md:flex-col">
-						<div className="min-w-1/2 max-md:min-w-1/1 px-2">
-							<Button
-								color="primary"
-								onClick={handleCreateRoom}
-								text="Create Room"
-							/>
-						</div>
-						<div className="min-w-1/2 max-md:min-w-1/1 px-2">
-							<Button
-								color="secondary"
-								onClick={handleJoinRoom}
-								text="Join Room"
-							/>
-						</div>
+				<div className="min-w-1/2 drop-shadow-dark max-md:min-w-8/10 mt-12 flex flex-row items-center justify-center drop-shadow-lg max-md:flex-col">
+					<div className="min-w-1/2 max-md:min-w-1/1 px-2">
+						<Button
+							color="primary"
+							onClick={handleCreateRoom}
+							text="Create Room"
+						/>
+					</div>
+					<div className="min-w-1/2 max-md:min-w-1/1 px-2">
+						<Button
+							color="secondary"
+							onClick={handleJoinRoom}
+							text="Join Room"
+						/>
 					</div>
 				</div>
 			</div>

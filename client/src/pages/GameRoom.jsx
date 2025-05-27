@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { RoomCode } from "../components/game";
+import { RoomCode, Board } from "../components/game";
 import { Background } from "../components/ui";
 
 import { SocketContext } from "../context/Context";
@@ -21,7 +21,11 @@ function GameRoom() {
 		);
 	}
 
-	return <Background></Background>;
+	return (
+		<Background>
+			<Board />
+		</Background>
+	);
 }
 
 export default GameRoom;

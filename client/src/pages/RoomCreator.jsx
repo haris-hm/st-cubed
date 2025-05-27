@@ -78,9 +78,9 @@ function RoomCreator() {
 
 	return (
 		<Background>
-			<div className="font-noto-sans text-primary flex min-h-screen items-center justify-center">
+			<div className="font-noto-sans text-primary flex h-full items-center justify-center">
 				<Modal>
-					<div className="min-w-1/1 mb-2 flex flex-row items-center justify-start">
+					<div className="min-w-1/1 mb-2 flex flex-row items-center justify-start max-md:justify-center">
 						<BackButton />
 					</div>
 					<h1 className="pb-3 text-4xl font-bold">

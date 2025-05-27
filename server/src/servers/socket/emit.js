@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 import logger from "../../models/logger.js";
 import { Room } from "../../models/room.js";
 
-const START_COUNTDOWN_LENGTH = 10;
+const START_COUNTDOWN_LENGTH = 3; // 10; normally 10 seconds, but for testing purposes we set it to 3 seconds
 
 /**
  * Emits a game start sequence to all players in the specified room.
