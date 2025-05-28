@@ -1,8 +1,6 @@
 import { useRef, useEffect } from "react";
 
-import Background from "../ui/Background";
-import Modal from "../ui/Modal";
-import ShareLinkButton from "../ui/ShareLinkButton";
+import { Background, Modal, ShareLinkButton } from "../ui";
 
 /**
  * Displays the room code to the user so they can share it with a friend.
