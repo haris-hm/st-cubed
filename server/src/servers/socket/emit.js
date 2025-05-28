@@ -17,19 +17,22 @@ function emitGameStartSequence({ io, currentRooms, roomID }) {
 	const room = currentRooms.get(roomID);
 	let countdown = START_COUNTDOWN_LENGTH;
 
+	room.emitMessageToPlayers(io, "update-start-countdown", {
+		gameStartCountdown: countdown,
+	});
+
 	const emissionInterval = setInterval(() => {
-		if (countdown == 0) {
-			clearInterval(emissionInterval);
-			io.to(roomID).emit("start-game");
-			room.startGame();
-			logger.info({ roomID: roomID }, "Game started");
-		}
-
-		io.to(roomID).emit("update-start-countdown", {
-			gameStartCountdown: countdown,
-		});
-
 		countdown--;
+
+		if (countdown === 0) {
+			clearInterval(emissionInterval);
+			room.startGame(io);
+			logger.info({ roomID: roomID }, "Game started");
+		} else {
+			room.emitMessageToPlayers(io, "update-start-countdown", {
+				gameStartCountdown: countdown,
+			});
+		}
 	}, 1000);
 }
 

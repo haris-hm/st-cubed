@@ -1,4 +1,5 @@
 import { SuperTicTacToe } from "./game.js";
+import logger from "./logger.js";
 
 /**
  * Generates a unique room ID.
@@ -53,10 +54,19 @@ class Room {
 		return false;
 	}
 
-	startGame() {
+	startGame(io) {
 		if (this.players.length === 2) {
 			this.state = "playing";
 			this.currentTurn = this.players[0];
+			this.emitMessageToPlayers(io, "start-game");
+		}
+	}
+
+	emitMessageToPlayers(io, method, data = null) {
+		if (data) {
+			io.to(this.id).emit(method, data);
+		} else {
+			io.to(this.id).emit(method);
 		}
 	}
 

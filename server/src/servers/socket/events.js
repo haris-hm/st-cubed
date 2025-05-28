@@ -140,7 +140,7 @@ function joinRoom(
 	callback(true);
 	emitGameStartSequence({ io, currentRooms, roomID });
 
-	logger.info({ roomID, roomID }, "Client joined room");
+	logger.info({ roomID: roomID, socketID: socketId }, "Client joined room");
 }
 
 /**

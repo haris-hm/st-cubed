@@ -1,7 +1,6 @@
 import pino from "pino";
 import path from "path";
 import { fileURLToPath } from "url";
-import { mkdir } from "fs";
 
 function getLogFilePath(filePrefix) {
 	// Get the current file's directory
