@@ -11,7 +11,10 @@ function Cell({ value, onClick, className = "" }) {
 	}
 
 	return (
-		<button className={`size-full p-2 ${className}`} onClick={onClick}>
+		<button
+			className={`size-full p-1 max-md:p-0.5 ${className}`}
+			onClick={onClick}
+		>
 			<img
 				className={`size-full ${src == "" ? "hidden" : ""}`}
 				src={src}
