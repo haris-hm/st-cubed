@@ -90,14 +90,14 @@ function RoomJoiner() {
 
 		const handleValidation = (isValid) => {
 			setValidCode(isValid);
+
+			if (isValid) {
+				joinRoom(roomCodeString, () => {});
+				navigate(`/game/${roomCodeString}`);
+			}
 		};
 
 		validateRoomID(roomCodeString, handleValidation);
-
-		if (validCode) {
-			joinRoom(roomCodeString, () => {});
-			navigate(`/game/${roomCodeString}`);
-		}
 	}
 
 	return (

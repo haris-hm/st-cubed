@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import {
 	SubBoard,
@@ -26,7 +26,14 @@ function Board() {
 			for (let j = 0; j < 9; j++) {
 				setCellValues((prev) => {
 					const newValues = prev.map((row) => [...row]);
-					newValues[i][j] = Math.random() < 0.5 ? "X" : "O";
+					const randValue = Math.random();
+					if (randValue < 0.33) {
+						newValues[i][j] = "X";
+					} else if (randValue < 0.66) {
+						newValues[i][j] = "O";
+					} else {
+						newValues[i][j] = null;
+					}
 					return newValues;
 				});
 			}
@@ -50,7 +57,8 @@ function Board() {
 	}
 
 	function handleSubBoardEvent(boardIndex, position, currentState) {
-		if (showMobileBoard) {
+		// Don't do anything if the mobile board is open and the boardIndex doesn't match
+		if (showMobileBoard && boardIndex !== mobileBoardArgs?.boardIndex) {
 			return;
 		}
 		console.log(
@@ -60,7 +68,7 @@ function Board() {
 
 	return (
 		<>
-			<div className="max-sm:pt-15 size-full p-5 max-sm:p-3">
+			<div className="max-sm:pt-15 size-full select-none p-5 max-sm:p-3">
 				<div className="relative mx-auto aspect-square max-h-full">
 					<VerticalDivider
 						index={0}
@@ -91,7 +99,7 @@ function Board() {
 					</div>
 				</div>
 			</div>
-			<div className="w-full">
+			<div className="w-full select-none">
 				<MobileSubBoard
 					show={showMobileBoard}
 					boardIndex={mobileBoardArgs?.boardIndex}
