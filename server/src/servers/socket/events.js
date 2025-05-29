@@ -15,24 +15,29 @@ import { emitGameStartSequence } from "./emit.js";
  * @param {Object} data The data sent from the client.
  * @param {string} data.discordId The Discord ID of the user.
  * @param {string} data.username The username of the user.
+ * @param {string} data.avatarHash The avatar hash of the user.
  *
  * @param {Function} callback An optional function that, if specified, will be called with a boolean indicating success or failure.
  */
 function registerUser(
 	{ socket, currentUsers },
-	{ discordId, username },
+	{ discordId, username, avatarHash },
 	callback = () => {},
 ) {
-	if (!discordId || !username) {
+	if (
+		discordId === undefined ||
+		username === undefined ||
+		avatarHash === undefined
+	) {
 		logger.error(
-			{ userID: discordId, username: username },
+			{ userID: discordId, username: username, avatarHash: avatarHash },
 			"Invalid user data",
 		);
 		callback(false);
 		return;
 	}
 
-	const user = new User(discordId, username);
+	const user = new User(discordId, socket.id, username, avatarHash);
 	currentUsers.set(socket.id, user);
 	callback(true);
 }

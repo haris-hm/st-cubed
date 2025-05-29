@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import {
 	SubBoard,
@@ -6,17 +6,19 @@ import {
 	HorizontalDivider,
 	MobileSubBoard,
 } from "./";
+import { SocketContext } from "../../context/Context";
 
 function Board() {
 	const [cellValues, setCellValues] = useState(
 		Array(9).fill(Array(9).fill(null)),
 	);
 	const [showMobileBoard, setShowMobileBoard] = useState(false);
-
 	const [mobileBoardArgs, setMobileBoardArgs] = useState({
 		boardIndex: null,
 		cellStates: null,
 	});
+
+	const { players, currentTurn, currentTime } = useContext(SocketContext);
 
 	const verticalDividerStyles = "w-2 max-md:w-1 rounded-2xl bg-gray-800";
 	const horizontalDividerStyles = "h-2 max-md:h-1 rounded-2xl bg-gray-800";

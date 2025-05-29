@@ -16,8 +16,10 @@ import { SocketContext } from "./Context";
  */
 function SocketProvider({ children }) {
 	const [value, setValue] = useState({
-		room: null,
-		boardState: null,
+		gameStarted: false,
+		players: [],
+		currentTurn: null,
+		currentTime: null,
 	});
 
 	useEffect(() => {

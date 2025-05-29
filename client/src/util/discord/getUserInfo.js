@@ -46,6 +46,18 @@ function getUserId(auth) {
 }
 
 /**
+ * Constructs the URL for the user's avatar using their Discord ID and avatar hash.
+ *
+ * @param {string} discordID - The Discord user ID.
+ * @param {string} discordHash - The avatar hash of the user.
+ *
+ * @returns {string} - Returns the URL for the user's avatar.
+ */
+function getAvatarURL(discordID, discordHash) {
+	return `https://cdn.discordapp.com/avatars/${discordID}/${discordHash}.png`;
+}
+
+/**
  * Gets the avatar hash of the authenticated user from the Discord OAuth2 Auth object.
  *
  * The avatar hash can be used as follows, along with the user's ID to construct a URL for the user's avatar:
@@ -79,4 +91,10 @@ function getGlobalName(auth) {
 	return auth.user.global_name;
 }
 
-export { getUsername, getUserId, getUserAvatarHash, getGlobalName };
+export {
+	getUsername,
+	getUserId,
+	getUserAvatarHash,
+	getGlobalName,
+	getAvatarURL,
+};

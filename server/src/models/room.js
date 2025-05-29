@@ -35,6 +35,7 @@ class Room {
 		this.players = [];
 		this.spectators = [];
 		this.currentTurn = null; // Player who is currently playing
+		this.currentTime = 0; // Current time in seconds
 		this.state = "waiting"; // waiting, playing, finished
 	}
 
@@ -58,7 +59,17 @@ class Room {
 		if (this.players.length === 2) {
 			this.state = "playing";
 			this.currentTurn = this.players[0];
-			this.emitMessageToPlayers(io, "start-game");
+
+			const payload = {
+				players: this.players.map((player) => ({
+					id: player.getDiscordId(),
+					avatarHash: player.getAvatarHash(),
+					piece: player.getPlayPiece(),
+				})),
+				currentTurn: this.currentTurn.getDiscordId(),
+				currentTime: this.currentTime,
+			};
+			this.emitMessageToPlayers(io, "start-game", payload);
 		}
 	}
 

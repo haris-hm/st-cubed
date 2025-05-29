@@ -30,7 +30,7 @@ function MobileSubBoard({ show, onSelect, onClose, cellStates, boardIndex }) {
 			ref={popupRef}
 		>
 			<div className="jusify-center flex w-full flex-col items-center">
-				<div className="bg-modal-gray inset-shadow-sm inset-shadow-dark border-primary z-21 h-1/6 w-1/4 translate-y-1 rounded-t-2xl border-4 border-b-transparent py-1">
+				<div className="bg-modal-gray hover:bg-active-text inset-shadow-sm inset-shadow-dark border-primary z-21 h-1/6 w-1/4 translate-y-1 rounded-t-2xl border-4 border-b-transparent py-1 active:bg-gray-400">
 					<button
 						className="flex size-full items-center justify-center"
 						onClick={handleCloseClick}

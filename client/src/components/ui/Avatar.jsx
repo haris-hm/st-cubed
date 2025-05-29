@@ -1,3 +1,5 @@
+import { getAvatarURL } from "../../util/discord/getUserInfo";
+
 /**
  * Renders a rounded avatar image using the user's Discord PFP.
  *
@@ -9,7 +11,7 @@
  * @returns {JSX.Element} - The rendered avatar image element.
  */
 function Avatar({ userId, avatarHash, className = "" }) {
-	const avatarUrl = `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png`;
+	const avatarUrl = getAvatarURL(userId, avatarHash);
 
 	return (
 		<img

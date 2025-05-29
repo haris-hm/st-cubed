@@ -8,10 +8,18 @@ export const socketEvents = ({ setValue }) => {
 		});
 	});
 
-	socket.on("start-game", () => {
-		console.log("game-started");
+	socket.on("start-game", ({ players, currentTurn, currentTime }) => {
+		console.log(
+			`Start game event received: players: ${players}, currentTurn: ${currentTurn}, currentTime: ${currentTime}`,
+		);
 		setValue((state) => {
-			return { ...state, gameStarted: true };
+			return {
+				...state,
+				gameStarted: true,
+				players,
+				currentTurn,
+				currentTime,
+			};
 		});
 	});
 };

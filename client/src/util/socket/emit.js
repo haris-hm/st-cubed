@@ -5,9 +5,11 @@ import { socket } from "./initSockets";
  *
  * @param {string} discordId The discordId of the user
  * @param {string} username The username of the user
+ * @param {string} avatarHash The avatar hash of the user
  */
-function registerUser(discordId, username) {
-	socket.emit("register-user", { discordId, username });
+function registerUser(discordId, username, avatarHash) {
+	console.log("Emitting register-user:", { discordId, username, avatarHash });
+	socket.emit("register-user", { discordId, username, avatarHash });
 }
 
 /**
