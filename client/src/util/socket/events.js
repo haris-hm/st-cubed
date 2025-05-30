@@ -9,9 +9,6 @@ export const socketEvents = ({ setValue }) => {
 	});
 
 	socket.on("start-game", ({ players, currentTurn, currentTime }) => {
-		console.log(
-			`Start game event received: players: ${players}, currentTurn: ${currentTurn}, currentTime: ${currentTime}`,
-		);
 		setValue((state) => {
 			return {
 				...state,

@@ -5,8 +5,11 @@ import {
 	VerticalDivider,
 	HorizontalDivider,
 	MobileSubBoard,
+	PlayerCard,
+	MobilePlayerCard,
 } from "./";
 import { SocketContext } from "../../context/Context";
+import { useMediaQuery } from "react-responsive";
 
 function Board() {
 	const [cellValues, setCellValues] = useState(
@@ -19,6 +22,8 @@ function Board() {
 	});
 
 	const { players, currentTurn, currentTime } = useContext(SocketContext);
+
+	const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 
 	const verticalDividerStyles = "w-2 max-md:w-1 rounded-2xl bg-gray-800";
 	const horizontalDividerStyles = "h-2 max-md:h-1 rounded-2xl bg-gray-800";
@@ -70,7 +75,7 @@ function Board() {
 
 	return (
 		<>
-			<div className="max-sm:pt-15 size-full select-none p-5 max-sm:p-3">
+			<div className="max-sm:pt-15 relative size-full select-none p-5 max-sm:p-3">
 				<div className="relative mx-auto aspect-square max-h-full">
 					<VerticalDivider
 						index={0}
@@ -100,6 +105,43 @@ function Board() {
 						))}
 					</div>
 				</div>
+
+				{isMobile ? (
+					<div className="flex size-full flex-col">
+						<MobilePlayerCard
+							discordID={players[0].id}
+							avatarHash={players[0].avatarHash}
+							displayName={players[0].displayName}
+							playPiece={players[0].piece}
+							className="mb-5"
+						/>
+						<MobilePlayerCard
+							discordID={players[1].id}
+							avatarHash={players[1].avatarHash}
+							displayName={players[1].displayName}
+							playPiece={players[1].piece}
+						/>
+					</div>
+				) : (
+					<>
+						<PlayerCard
+							className={"absolute left-0 top-0 p-5"}
+							side={"left"}
+							discordID={players[0].id}
+							avatarHash={players[0].avatarHash}
+							displayName={players[0].displayName}
+							playPiece={players[0].piece}
+						/>
+						<PlayerCard
+							className={"absolute right-0 top-0 p-5"}
+							side={"right"}
+							discordID={players[1].id}
+							avatarHash={players[1].avatarHash}
+							displayName={players[1].displayName}
+							playPiece={players[1].piece}
+						/>
+					</>
+				)}
 			</div>
 			<div className="w-full select-none">
 				<MobileSubBoard

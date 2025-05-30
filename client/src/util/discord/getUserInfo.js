@@ -81,7 +81,7 @@ function getUserAvatarHash(auth) {
  *
  * @param {Object} auth - The Auth object obtained by authenticating through Discord OAuth2.
  *
- * @returns {string|null} - Returns the global display name, or null if the auth object is invalid.
+ * @returns {string|null} Returns the global display name, or null if the auth object is invalid.
  */
 function getGlobalName(auth) {
 	if (!isValidAuth(auth)) {
@@ -94,7 +94,7 @@ function getGlobalName(auth) {
 export {
 	getUsername,
 	getUserId,
+	getAvatarURL,
 	getUserAvatarHash,
 	getGlobalName,
-	getAvatarURL,
 };

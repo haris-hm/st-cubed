@@ -1,11 +1,16 @@
 import logger from "./logger.js";
 
 class User {
-	constructor(discordId, socketId, name, avatarHash) {
+	constructor(discordId, socketId, username, displayName, avatarHash) {
 		this.discordId = discordId;
 		this.socketId = socketId;
-		this.username = name;
+		this.username = username;
+		this.displayName = displayName;
 		this.avatarHash = avatarHash;
+
+		logger.info(
+			`User created: ${this.username} (${this.discordId}, ${this.socketId}, ${this.displayName}, ${this.avatarHash})`,
+		);
 	}
 
 	getDiscordId() {
@@ -20,6 +25,10 @@ class User {
 		return this.username;
 	}
 
+	getDisplayName() {
+		return this.displayName;
+	}
+
 	getAvatarHash() {
 		return this.avatarHash;
 	}
@@ -27,13 +36,14 @@ class User {
 	/**
 	 * Makes a player object out of this user with the given playPiece
 	 * @param {string} playPiece - The piece the player will play with (X or O)
-	 * @returns {Player} - The player object
+	 * @returns {Player} The player object
 	 */
 	getPlayer(playPiece) {
 		return new Player(
 			this.discordId,
 			this.socketId,
 			this.username,
+			this.displayName,
 			this.avatarHash,
 			playPiece,
 		);
@@ -41,8 +51,15 @@ class User {
 }
 
 class Player extends User {
-	constructor(discordId, socketId, name, avatarHash, playPiece) {
-		super(discordId, socketId, name, avatarHash);
+	constructor(
+		discordId,
+		socketId,
+		username,
+		displayName,
+		avatarHash,
+		playPiece,
+	) {
+		super(discordId, socketId, username, displayName, avatarHash);
 		this.playPiece = playPiece; // X or O
 	}
 

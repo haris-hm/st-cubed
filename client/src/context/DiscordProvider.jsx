@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { registerUser } from "../util/socket/emit";
 import {
+	getGlobalName,
 	getUserAvatarHash,
 	getUserId,
 	getUsername,
@@ -18,13 +19,21 @@ import { DiscordSDKContext } from "./Context";
  * @returns {JSX.Element} - The DiscordProvider component that provides the Discord SDK context to its children.
  */
 function DiscordProvider({ discordInfo, children }) {
-	useEffect(() => {
-		const userId = getUserId(discordInfo.auth);
-		const username = getUsername(discordInfo.auth);
-		const avatarHash = getUserAvatarHash(discordInfo.auth);
+	const hasRun = useRef(false);
 
-		if (userId && username && avatarHash) {
-			registerUser(userId, username, avatarHash);
+	useEffect(() => {
+		// Prevent multiple registrations
+		if (hasRun.current) return;
+
+		const auth = discordInfo?.auth;
+		const userId = getUserId(auth);
+		const username = getUsername(auth);
+		const displayName = getGlobalName(auth);
+		const avatarHash = getUserAvatarHash(auth);
+
+		if (userId && username && displayName && avatarHash) {
+			registerUser(userId, username, displayName, avatarHash);
+			hasRun.current = true;
 		}
 	}, [discordInfo]);
 

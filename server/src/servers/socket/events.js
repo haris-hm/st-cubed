@@ -21,23 +21,35 @@ import { emitGameStartSequence } from "./emit.js";
  */
 function registerUser(
 	{ socket, currentUsers },
-	{ discordId, username, avatarHash },
+	{ discordId, username, displayName, avatarHash },
 	callback = () => {},
 ) {
 	if (
 		discordId === undefined ||
 		username === undefined ||
+		discordId === undefined ||
 		avatarHash === undefined
 	) {
 		logger.error(
-			{ userID: discordId, username: username, avatarHash: avatarHash },
+			{
+				userID: discordId,
+				username: username,
+				displayName: displayName,
+				avatarHash: avatarHash,
+			},
 			"Invalid user data",
 		);
 		callback(false);
 		return;
 	}
 
-	const user = new User(discordId, socket.id, username, avatarHash);
+	const user = new User(
+		discordId,
+		socket.id,
+		username,
+		displayName,
+		avatarHash,
+	);
 	currentUsers.set(socket.id, user);
 	callback(true);
 }

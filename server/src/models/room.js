@@ -63,6 +63,8 @@ class Room {
 			const payload = {
 				players: this.players.map((player) => ({
 					id: player.getDiscordId(),
+					username: player.getUsername(),
+					displayName: player.getDisplayName(),
 					avatarHash: player.getAvatarHash(),
 					piece: player.getPlayPiece(),
 				})),
