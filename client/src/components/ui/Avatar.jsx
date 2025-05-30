@@ -16,7 +16,7 @@ function Avatar({ userId, avatarHash, className = "" }) {
 	return (
 		<img
 			src={avatarUrl}
-			alt={`Profile picture of user ${userId} ${className}`}
+			alt={"Profile picture of user"}
 			className={`select-none rounded-full ${className}`}
 			draggable="false"
 		/>

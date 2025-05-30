@@ -22,9 +22,11 @@ function SubBoard({
 	}
 
 	return (
-		<div className="relative size-full p-4 max-md:p-2">
+		<div
+			className={`relative p-4 max-md:p-2 ${popup ? "size-full" : "aspect-square h-full"}`}
+		>
 			<div
-				className={`bg-modal-gray/75 ${!popup ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5`}
+				className={`bg-modal-gray/75 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${!popup ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""}`}
 			>
 				<div className="relative">
 					<VerticalDivider

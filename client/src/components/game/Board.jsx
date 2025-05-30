@@ -1,16 +1,14 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 
 import {
 	SubBoard,
 	VerticalDivider,
 	HorizontalDivider,
 	MobileSubBoard,
-	PlayerCard,
-	MobilePlayerCard,
+	GameInfoBar,
+	GameInfoColumn,
 } from "./";
-import { SocketContext } from "../../context/Context";
 import { useMediaQuery } from "react-responsive";
-
 function Board() {
 	const [cellValues, setCellValues] = useState(
 		Array(9).fill(Array(9).fill(null)),
@@ -21,9 +19,7 @@ function Board() {
 		cellStates: null,
 	});
 
-	const { players, currentTurn, currentTime } = useContext(SocketContext);
-
-	const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
+	const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
 	const verticalDividerStyles = "w-2 max-md:w-1 rounded-2xl bg-gray-800";
 	const horizontalDividerStyles = "h-2 max-md:h-1 rounded-2xl bg-gray-800";
@@ -75,73 +71,40 @@ function Board() {
 
 	return (
 		<>
-			<div className="max-sm:pt-15 relative size-full select-none p-5 max-sm:p-3">
-				<div className="relative mx-auto aspect-square max-h-full">
-					<VerticalDivider
-						index={0}
-						className={verticalDividerStyles}
-					/>
-					<VerticalDivider
-						index={1}
-						className={verticalDividerStyles}
-					/>
-					<HorizontalDivider
-						index={0}
-						className={horizontalDividerStyles}
-					/>
-					<HorizontalDivider
-						index={1}
-						className={horizontalDividerStyles}
-					/>
-					<div className="h-1/1 grid w-full grid-cols-3 grid-rows-3">
-						{Array.from({ length: 9 }).map((_, i) => (
-							<SubBoard
-								key={i}
-								boardIndex={i}
-								cellStates={cellValues[i]}
-								onSelect={handleSubBoardEvent}
-								onSelectMobile={handleOpenMobileSubBoard}
-							/>
-						))}
+			<div className="flex size-full select-none flex-col p-5 max-sm:p-3">
+				{!isMobile ? <GameInfoBar className="pb-4" /> : null}
+				<div className="max-md:pt-15 flex items-center justify-center">
+					<div className="relative mx-auto aspect-square max-h-[calc(100vh-120px-2.5rem)] w-full max-w-[min(100vw,100vh-120px)]">
+						<VerticalDivider
+							index={0}
+							className={verticalDividerStyles}
+						/>
+						<VerticalDivider
+							index={1}
+							className={verticalDividerStyles}
+						/>
+						<HorizontalDivider
+							index={0}
+							className={horizontalDividerStyles}
+						/>
+						<HorizontalDivider
+							index={1}
+							className={horizontalDividerStyles}
+						/>
+						<div className="grid h-full w-full grid-cols-3 grid-rows-3">
+							{Array.from({ length: 9 }).map((_, i) => (
+								<SubBoard
+									key={i}
+									boardIndex={i}
+									cellStates={cellValues[i]}
+									onSelect={handleSubBoardEvent}
+									onSelectMobile={handleOpenMobileSubBoard}
+								/>
+							))}
+						</div>
 					</div>
 				</div>
-
-				{isMobile ? (
-					<div className="flex size-full flex-col">
-						<MobilePlayerCard
-							discordID={players[0].id}
-							avatarHash={players[0].avatarHash}
-							displayName={players[0].displayName}
-							playPiece={players[0].piece}
-							className="mb-5"
-						/>
-						<MobilePlayerCard
-							discordID={players[1].id}
-							avatarHash={players[1].avatarHash}
-							displayName={players[1].displayName}
-							playPiece={players[1].piece}
-						/>
-					</div>
-				) : (
-					<>
-						<PlayerCard
-							className={"absolute left-0 top-0 p-5"}
-							side={"left"}
-							discordID={players[0].id}
-							avatarHash={players[0].avatarHash}
-							displayName={players[0].displayName}
-							playPiece={players[0].piece}
-						/>
-						<PlayerCard
-							className={"absolute right-0 top-0 p-5"}
-							side={"right"}
-							discordID={players[1].id}
-							avatarHash={players[1].avatarHash}
-							displayName={players[1].displayName}
-							playPiece={players[1].piece}
-						/>
-					</>
-				)}
+				{isMobile ? <GameInfoColumn className="pt-4" /> : null}
 			</div>
 			<div className="w-full select-none">
 				<MobileSubBoard

@@ -35,7 +35,7 @@ class Room {
 		this.players = [];
 		this.spectators = [];
 		this.currentTurn = null; // Player who is currently playing
-		this.currentTime = 0; // Current time in seconds
+		this.currentTime = this.timeLimit === "unlimited" ? -1 : this.timeLimit; // Current time in seconds
 		this.state = "waiting"; // waiting, playing, finished
 	}
 
