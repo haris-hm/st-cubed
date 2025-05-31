@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import {
 	SubBoard,
@@ -9,6 +9,10 @@ import {
 	GameInfoColumn,
 } from "./";
 import { useMediaQuery } from "react-responsive";
+import { makeMove } from "../../util/socket/emit";
+import { DiscordSDKContext, SocketContext } from "../../context/Context";
+import { getUserId } from "../../util/discord/getUserInfo";
+
 function Board() {
 	const [cellValues, setCellValues] = useState(
 		Array(9).fill(Array(9).fill(null)),
@@ -19,29 +23,15 @@ function Board() {
 		cellStates: null,
 	});
 
+	const { auth } = useContext(DiscordSDKContext);
+	const { currentTurn } = useContext(SocketContext);
+
 	const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
 	const verticalDividerStyles = "w-2 max-md:w-1 rounded-2xl bg-gray-800";
 	const horizontalDividerStyles = "h-2 max-md:h-1 rounded-2xl bg-gray-800";
 
-	useEffect(() => {
-		for (let i = 0; i < 9; i++) {
-			for (let j = 0; j < 9; j++) {
-				setCellValues((prev) => {
-					const newValues = prev.map((row) => [...row]);
-					const randValue = Math.random();
-					if (randValue < 0.33) {
-						newValues[i][j] = "X";
-					} else if (randValue < 0.66) {
-						newValues[i][j] = "O";
-					} else {
-						newValues[i][j] = null;
-					}
-					return newValues;
-				});
-			}
-		}
-	}, []);
+	useEffect(() => {}, []);
 
 	function handleOpenMobileSubBoard(boardIndex) {
 		setMobileBoardArgs({
@@ -64,9 +54,15 @@ function Board() {
 		if (showMobileBoard && boardIndex !== mobileBoardArgs?.boardIndex) {
 			return;
 		}
-		console.log(
-			`Board: ${boardIndex}, Position: ${position}, Current State: ${currentState}`,
-		);
+
+		const userID = getUserId(auth);
+
+		if (currentState === null && currentTurn === userID) {
+			console.log(
+				`Making move at board ${boardIndex}, position ${position} for user ${userID}`,
+			);
+			makeMove({ userID, boardIndex, position }, () => {});
+		}
 	}
 
 	return (

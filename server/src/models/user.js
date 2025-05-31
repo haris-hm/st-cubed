@@ -7,10 +7,7 @@ class User {
 		this.username = username;
 		this.displayName = displayName;
 		this.avatarHash = avatarHash;
-
-		logger.info(
-			`User created: ${this.username} (${this.discordId}, ${this.socketId}, ${this.displayName}, ${this.avatarHash})`,
-		);
+		this.currentRoom = null;
 	}
 
 	getDiscordId() {
@@ -31,6 +28,18 @@ class User {
 
 	getAvatarHash() {
 		return this.avatarHash;
+	}
+
+	getCurrentRoom() {
+		if (!this.currentRoom) {
+			logger.error("User is not in a room");
+			throw new Error("User is not in a room");
+		}
+		return this.currentRoom;
+	}
+
+	joinRoom(room) {
+		this.currentRoom = room;
 	}
 
 	/**

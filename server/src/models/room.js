@@ -61,6 +61,7 @@ class Room {
 			this.currentTurn = this.players[0];
 
 			const payload = {
+				roomID: this.id,
 				players: this.players.map((player) => ({
 					id: player.getDiscordId(),
 					username: player.getUsername(),
@@ -73,6 +74,70 @@ class Room {
 			};
 			this.emitMessageToPlayers(io, "start-game", payload);
 		}
+	}
+
+	validateMoveData(userID, boardIndex, position) {
+		if (userID !== this.currentTurn.getDiscordId()) {
+			logger.warn(
+				`Player ${userID} attempted to make a move out of turn in room ${this.id}.`,
+			);
+			return false;
+		}
+
+		const validMove = this.game.validateMove(boardIndex, position);
+
+		if (!validMove.response) {
+			logger.warn(
+				`Player ${userID} made an invalid move in room ${this.id}: ${validMove.message}.`,
+			);
+			return false;
+		}
+
+		return true;
+	}
+
+	makeMove(io, userID, boardIndex, position) {
+		const validMove = this.validateMoveData(userID, boardIndex, position);
+		if (!validMove) {
+			return false;
+		}
+
+		this.game.setBoardIndex(boardIndex);
+		this.game.makeMove(boardIndex, position);
+		const {
+			currentPlayerPiece,
+			currentBoardIndex,
+			subGameStates,
+			superBoardState,
+		} = this.game.getState();
+
+		const turnSet = this.setCurrentTurn(currentPlayerPiece);
+
+		if (turnSet) {
+			this.emitMessageToPlayers(io, "update-board", {
+				currentTurn: this.currentTurn.getDiscordId(),
+				currentBoardIndex,
+				subGameStates,
+				superBoardState,
+			});
+			return true;
+		} else {
+			logger.error(
+				`Failed to set current turn for player ${userID} in room ${this.id}.`,
+			);
+			return false;
+		}
+	}
+
+	setCurrentTurn(playPiece) {
+		const nextPlayer = this.players.find(
+			(player) => player.getPlayPiece() === playPiece,
+		);
+		if (nextPlayer) {
+			this.currentTurn = nextPlayer;
+			return true;
+		}
+		return false;
 	}
 
 	emitMessageToPlayers(io, method, data = null) {

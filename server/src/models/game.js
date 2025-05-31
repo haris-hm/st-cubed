@@ -59,6 +59,19 @@ class TicTacToe {
 			board: this.board,
 		};
 	}
+
+	validatePosition(position) {
+		if (position < 0 || position > 8) {
+			return {
+				response: false,
+				message: "Invalid position. Must be between 0 and 8.",
+			};
+		} else if (this.board[position] !== null) {
+			return { response: false, message: "Position already taken." };
+		}
+
+		return { response: true, message: "" };
+	}
 }
 
 class SuperTicTacToe {
@@ -124,13 +137,39 @@ class SuperTicTacToe {
 		}
 	}
 
+	validateMove(boardIndex, position) {
+		if (
+			this.currentBoardIndex !== null &&
+			boardIndex !== this.currentBoardIndex
+		) {
+			return {
+				response: false,
+				message: `Cannot make a move on board ${boardIndex} when the current board being played is ${this.currentBoardIndex}.`,
+			};
+		} else if (boardIndex < 0 || boardIndex > 8) {
+			return {
+				response: false,
+				message: "Invalid board index. Must be between 0 and 8.",
+			};
+		}
+
+		const validPosition =
+			this.boards[boardIndex].validatePosition(position);
+
+		if (validPosition.response === false) {
+			return validPosition;
+		}
+
+		return { response: true, message: "" };
+	}
+
 	getBoardIndex() {
 		return this.currentBoardIndex;
 	}
 
 	getState() {
 		return {
-			currentPlayer: this.currentPlayer,
+			currentPlayerPiece: this.currentPlayer,
 			currentBoardIndex: this.currentBoardIndex,
 			subGameStates: this.boards.map((board) => board.getState().board),
 			superBoardState: this.superBoard.getState().board,

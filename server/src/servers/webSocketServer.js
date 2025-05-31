@@ -7,6 +7,7 @@ import {
 	createRoom,
 	joinRoom,
 	validateRoomID,
+	makeMove,
 } from "./socket/events.js";
 
 // This holds all socketIds and their corresponding room instance
@@ -38,6 +39,10 @@ function createSocketEndpoints(socket, io) {
 
 	socket.on("join-room", (data, callback = () => {}) => {
 		joinRoom(context, data, callback);
+	});
+
+	socket.on("make-move", (data, callback) => {
+		makeMove(context, data, callback);
 	});
 
 	socket.on("validate-room-id", (data, callback) => {

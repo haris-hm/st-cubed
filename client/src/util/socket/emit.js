@@ -64,4 +64,16 @@ function joinRoom(roomID, callback) {
 	socket.emit("join-room", { roomID }, callback);
 }
 
-export { registerUser, createRoom, validateRoomID, joinRoom };
+/**
+ *
+ * @param {Object} moveInfo - An object containing the move information
+ * @param {string} moveInfo.userID - The ID of the user making the move
+ * @param {number} moveInfo.boardIndex - The index of the board where the move is made
+ * @param {number} moveInfo.position - The position on the board where the move is made
+ * @param {Function} callback - A callback function to handle the server's response.
+ */
+function makeMove({ userID, boardIndex, position }, callback) {
+	socket.emit("make-move", { userID, boardIndex, position }, callback);
+}
+
+export { registerUser, createRoom, validateRoomID, joinRoom, makeMove };

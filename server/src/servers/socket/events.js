@@ -101,6 +101,7 @@ function createRoom(
 	const roomID = room.getID();
 
 	room.addPlayer(user.getPlayer("X"));
+	user.joinRoom(roomID);
 	socket.join(roomID);
 	currentRooms.set(roomID, room);
 
@@ -152,6 +153,7 @@ function joinRoom(
 	}
 
 	room.addPlayer(user.getPlayer("O"));
+	user.joinRoom(roomID);
 	socket.join(roomID);
 
 	callback(true);
@@ -181,4 +183,43 @@ function validateRoomID({ currentRooms }, { roomID }, callback) {
 	callback(false);
 }
 
-export { registerUser, createRoom, joinRoom, validateRoomID };
+/**
+ *
+ * @param {*} param0
+ * @param {*} param1
+ * @param {*} callback
+ */
+function makeMove(
+	{ io, socket, currentRooms, currentUsers },
+	{ userID, boardIndex, position },
+	callback,
+) {
+	const user = currentUsers.get(socket.id);
+
+	let roomID;
+	try {
+		roomID = user.getCurrentRoom();
+	} catch (error) {
+		logger.error(
+			{ userID: userID, error: error.message },
+			"Error getting current room for user",
+		);
+		callback(false);
+		return;
+	}
+
+	const room = currentRooms.get(roomID);
+	room.makeMove(io, userID, boardIndex, position);
+
+	logger.info(
+		{
+			roomID: roomID,
+			userID: userID,
+			boardIndex: boardIndex,
+			position: position,
+		},
+		"Making move",
+	);
+}
+
+export { registerUser, createRoom, joinRoom, validateRoomID, makeMove };
