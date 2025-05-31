@@ -73,7 +73,7 @@ function Board() {
 		<>
 			<div className="flex size-full select-none flex-col p-5 max-sm:p-3">
 				{!isMobile ? <GameInfoBar className="pb-4" /> : null}
-				<div className="max-md:pt-15 flex items-center justify-center">
+				<div className="max-md:mt-15 flex items-center justify-center">
 					<div className="relative mx-auto aspect-square max-h-[calc(100vh-120px-2.5rem)] w-full max-w-[min(100vw,100vh-120px)]">
 						<VerticalDivider
 							index={0}
@@ -104,7 +104,11 @@ function Board() {
 						</div>
 					</div>
 				</div>
-				{isMobile ? <GameInfoColumn className="pt-4" /> : null}
+				{isMobile ? (
+					<div className="mt-4 min-h-0 flex-1 overflow-y-auto px-6">
+						<GameInfoColumn />
+					</div>
+				) : null}
 			</div>
 			<div className="w-full select-none">
 				<MobileSubBoard

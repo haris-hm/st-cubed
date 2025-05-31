@@ -14,15 +14,23 @@ function PlayerCard({
 	const { currentTurn } = useContext(SocketContext);
 
 	const avatarElement = (
-		<Avatar
-			userId={discordID}
-			avatarHash={avatarHash}
-			className={`border-light border-4 ${currentTurn === discordID ? "outline-6 outline-tertiary shadow-light shadow-2xl" : ""} ${side === "left" ? "mr-6" : "ml-6"} ${fullHeightName ? "size-20" : "size-25"}`}
-		/>
+		<div
+			className={`flex flex-row ${fullHeightName ? "w-1/4 justify-center" : `max-2md:w-1/3 w-1/4 ${side === "left" ? "justify-end" : "justify-start"}`}`}
+		>
+			<Avatar
+				userId={discordID}
+				avatarHash={avatarHash}
+				className={`border-light size-full border-4 ${currentTurn === discordID ? "outline-6 outline-tertiary shadow-light shadow-2xl" : ""} ${fullHeightName ? "max-w-20" : "max-w-25"}`}
+			/>
+		</div>
 	);
 
 	const displayNameText = (
-		<p className="line-clamp-1 px-4 py-2">{displayName}</p>
+		<p
+			className={`px-4 py-2 ${fullHeightName ? "" : "max-2md:w-[5em] 2md:max-w-3/4 truncate text-ellipsis break-all"}`}
+		>
+			{displayName}
+		</p>
 	);
 
 	const playPieceIndicator = (
@@ -35,25 +43,29 @@ function PlayerCard({
 
 	const nameElement = (
 		<div
-			className={`text-primary bg-modal-gray inset-shadow-dark inset-shadow-sm border-primary font-noto-sans flex w-full flex-row items-center justify-between rounded-2xl border-4 text-2xl font-bold md:rounded-full ${fullHeightName ? "h-full" : ""}`}
+			className={`w-3/4 ${fullHeightName ? "h-20" : `max-2md:w-2/3 flex h-full ${side === "left" ? "pl-4" : "pr-4"}`}`}
 		>
-			{side === "left" ? (
-				<>
-					{displayNameText}
-					{playPieceIndicator}
-				</>
-			) : (
-				<>
-					{playPieceIndicator}
-					{displayNameText}
-				</>
-			)}
+			<div
+				className={`text-primary bg-modal-gray inset-shadow-dark inset-shadow-sm border-primary font-noto-sans flex size-full flex-row items-center justify-between rounded-2xl border-4 text-2xl font-bold md:rounded-full`}
+			>
+				{side === "left" ? (
+					<>
+						{displayNameText}
+						{playPieceIndicator}
+					</>
+				) : (
+					<>
+						{playPieceIndicator}
+						{displayNameText}
+					</>
+				)}
+			</div>
 		</div>
 	);
 
 	return (
 		<div
-			className={`flex w-full flex-row items-center justify-start ${className}`}
+			className={`flex w-full flex-row items-center justify-between ${className}`}
 		>
 			{side === "left" ? (
 				<>

@@ -37,6 +37,9 @@
 
 	--font-noto-sans: "Noto Sans", sans-serif;
 
+	--breakpoint-2md: 56rem;
+
+	/* Animations */
 	--animate-fly-in-bottom: fly-in-bottom 0.3s ease-out;
 	--animate-fly-out-bottom: fly-out-bottom 0.3s ease-in;
 

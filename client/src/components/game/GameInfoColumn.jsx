@@ -10,7 +10,7 @@ function GameInfoColumn({ className = "" }) {
 	const secondPlayer = players[1];
 
 	return (
-		<div className={`flex size-full flex-col justify-center ${className}`}>
+		<div className={`flex flex-col justify-center ${className}`}>
 			<TimeIndicator className="mb-4" />
 			<PlayerCard
 				discordID={firstPlayer.id}
