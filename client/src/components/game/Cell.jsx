@@ -1,6 +1,12 @@
 import { useMediaQuery } from "react-responsive";
 
-function Cell({ value, onClick, className = "", popup = false }) {
+function Cell({
+	value,
+	onClick,
+	isDisabled = false,
+	className = "",
+	popup = false,
+}) {
 	const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 	let src = "";
 	let alt = "";
@@ -15,11 +21,11 @@ function Cell({ value, onClick, className = "", popup = false }) {
 
 	return (
 		<button
-			className={`aspect-square size-full ${popup ? "p-3" : "p-1"} ${className}`}
+			className={`aspect-square size-full ${popup ? "p-3" : "p-1"} ${isDisabled ? "cursor-not-allowed" : "cursor-pointer"} ${className}`}
 			onClick={onClick}
 			// Allow user to open the popup by clicking on the cell
 			// but disable the button in the popup if the cell already has a value
-			disabled={isMobile && popup && value}
+			disabled={(isMobile && popup && value) || isDisabled}
 		>
 			{src ? (
 				<img
@@ -30,7 +36,7 @@ function Cell({ value, onClick, className = "", popup = false }) {
 				/>
 			) : (
 				<span
-					className={`hover:bg-active-text active:outline-primary block h-full w-full active:bg-gray-400 ${popup ? "rounded-2xl active:outline-8 active:-outline-offset-8" : "rounded-lg active:outline-4 active:-outline-offset-4"}`}
+					className={`block h-full w-full ${!isDisabled ? "hover:bg-active-text active:outline-primary active:bg-gray-400" : ""} ${popup ? "rounded-2xl" : "rounded-lg"} ${popup && !isDisabled ? "active:outline-8 active:-outline-offset-8" : ""} ${!popup && !isDisabled ? "active:outline-4 active:-outline-offset-4" : ""}`}
 				/>
 			)}
 		</button>

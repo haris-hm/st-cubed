@@ -102,14 +102,12 @@ class Room {
 			return false;
 		}
 
-		this.game.makeMove(position, boardIndex);
-
 		const {
 			currentPlayerPiece,
 			currentBoardIndex,
 			subGameStates,
 			superBoardState,
-		} = this.game.getState();
+		} = this.game.makeMove(position, boardIndex);
 
 		const turnSet = this.setCurrentTurn(currentPlayerPiece);
 

@@ -22,6 +22,7 @@ function MobileSubBoard({ show, onSelect, onClose, cellStates, boardIndex }) {
 
 	function handleCellClick(boardIndex, position, currentState) {
 		onSelect(boardIndex, position, currentState);
+		handleCloseClick();
 	}
 
 	return (

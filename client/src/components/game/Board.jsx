@@ -18,40 +18,47 @@ function Board() {
 		Array(9).fill(Array(9).fill(null)),
 	);
 	const [showMobileBoard, setShowMobileBoard] = useState(false);
-	const [mobileBoardArgs, setMobileBoardArgs] = useState({
-		boardIndex: null,
-		cellStates: null,
-	});
+	const [mobileBoardIndex, setMobileBoardIndex] = useState(null);
 
 	const { auth } = useContext(DiscordSDKContext);
-	const { currentTurn } = useContext(SocketContext);
+	const { currentTurn, boardState } = useContext(SocketContext);
 
 	const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
 	const verticalDividerStyles = "w-2 max-md:w-1 rounded-2xl bg-gray-800";
 	const horizontalDividerStyles = "h-2 max-md:h-1 rounded-2xl bg-gray-800";
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		const newCellValues = [...cellValues];
+
+		// When the boardstate is initialized by the server after the first move
+		boardState?.subGameStates?.forEach((subGameState, index) => {
+			newCellValues[index] = subGameState.board.map((cell) => {
+				if (cell === "X" || cell === "O") {
+					return cell;
+				}
+				return null;
+			});
+		});
+
+		setCellValues(newCellValues);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [boardState]);
 
 	function handleOpenMobileSubBoard(boardIndex) {
-		setMobileBoardArgs({
-			boardIndex,
-			cellStates: cellValues[boardIndex],
-		});
+		setMobileBoardIndex(boardIndex);
 		setShowMobileBoard(true);
 	}
 
 	function handleCloseMobileSubBoard() {
 		setShowMobileBoard(false);
-		setMobileBoardArgs({
-			boardIndex: null,
-			cellStates: null,
-		});
+		setMobileBoardIndex(null);
 	}
 
 	function handleSubBoardEvent(boardIndex, position, currentState) {
 		// Don't do anything if the mobile board is open and the boardIndex doesn't match
-		if (showMobileBoard && boardIndex !== mobileBoardArgs?.boardIndex) {
+		if (showMobileBoard && boardIndex !== mobileBoardIndex) {
 			return;
 		}
 
@@ -109,8 +116,8 @@ function Board() {
 			<div className="w-full select-none">
 				<MobileSubBoard
 					show={showMobileBoard}
-					boardIndex={mobileBoardArgs?.boardIndex}
-					cellStates={mobileBoardArgs?.cellStates}
+					boardIndex={mobileBoardIndex}
+					cellStates={cellValues[mobileBoardIndex]}
 					onSelect={handleSubBoardEvent}
 					onClose={handleCloseMobileSubBoard}
 				/>

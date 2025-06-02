@@ -40,14 +40,6 @@ export const socketEvents = ({ setValue }) => {
 					},
 				};
 			});
-
-			console.log(
-				"update-board",
-				currentTurn,
-				currentBoardIndex,
-				subGameStates,
-				superBoardState,
-			);
 		},
 	);
 };

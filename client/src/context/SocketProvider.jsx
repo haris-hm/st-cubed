@@ -21,7 +21,11 @@ function SocketProvider({ children }) {
 		players: [],
 		currentTurn: null,
 		currentTime: null,
-		boardState: null,
+		boardState: {
+			currentBoardIndex: -1,
+			subGameStates: null,
+			superBoardState: null,
+		},
 	});
 
 	useEffect(() => {

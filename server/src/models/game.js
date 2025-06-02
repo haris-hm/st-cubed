@@ -21,9 +21,9 @@ class TicTacToe {
 	makeMove(position, player) {
 		if (this.board[position] === BoardState.UNCLAIMED) {
 			this.board[position] = player;
-			return true;
 		}
-		return false;
+		this.checkWinner();
+		return this.winState;
 	}
 
 	checkWinner() {
@@ -38,6 +38,9 @@ class TicTacToe {
 			[2, 4, 6], // diagonals
 		];
 
+		let winner = BoardState.UNCLAIMED;
+		let winningCombination = null;
+
 		winningCombinations.forEach((combination) => {
 			const [a, b, c] = combination;
 			if (
@@ -45,32 +48,46 @@ class TicTacToe {
 				this.board[a] === this.board[b] &&
 				this.board[a] === this.board[c]
 			) {
-				return this.board[a];
+				winner = this.board[a];
+				winningCombination = combination;
 			}
 		});
 
-		return this.isDraw();
+		if (!winningCombination && this.isDraw()) {
+			winner = BoardState.DRAW;
+		}
+
+		this.winState = {
+			player: winner,
+			winningComination: winningCombination,
+		};
 	}
 
 	isDraw() {
-		return this.board.every((cell) => cell !== BoardState.UNCLAIMED)
-			? BoardState.DRAW
-			: BoardState.UNCLAIMED;
+		return this.board.every((cell) => cell !== BoardState.UNCLAIMED);
 	}
 
 	getState() {
 		return {
 			board: this.board,
+			winState: this.winState,
 		};
 	}
 
 	validatePosition(position) {
+		if (this.winState.player !== BoardState.UNCLAIMED) {
+			return {
+				response: false,
+				message: "Game already won or drawn",
+			};
+		}
+
 		if (position < 0 || position > 8) {
 			return {
 				response: false,
 				message: "Invalid position. Must be between 0 and 8",
 			};
-		} else if (this.board[position] !== null) {
+		} else if (this.board[position] !== BoardState.UNCLAIMED) {
 			return { response: false, message: "Position already taken" };
 		}
 
@@ -103,36 +120,23 @@ class SuperTicTacToe {
 
 		const board = this.boards[this.currentBoardIndex];
 		const moveResult = board.makeMove(position, this.currentPlayer);
+		const winnerResult = moveResult.player;
 
-		if (moveResult) {
+		if (winnerResult === BoardState.UNCLAIMED) {
 			this.switchPlayer();
 			this.#setNextBoardIndex(position);
 		} else {
-			const winner = board.checkWinner();
-
-			if (winner) {
-				this.superBoard.makeMove(this.currentBoardIndex, winner);
-			}
+			this.superBoard.makeMove(this.currentBoardIndex, winnerResult);
 		}
-	}
 
-	checkWinner() {
-		const winner = this.superBoard.checkWinner();
-
-		if (winner !== BoardState.UNCLAIMED) {
-			switch (winner) {
-				case BoardState.X:
-					break;
-				case BoardState.O:
-					break;
-				case BoardState.DRAW:
-					break;
-			}
-		}
+		return this.getState();
 	}
 
 	#setNextBoardIndex(boardIndex) {
-		if (this.superBoard.checkWinner() === BoardState.UNCLAIMED) {
+		if (
+			this.boards[boardIndex].getState().winState.player ===
+			BoardState.UNCLAIMED
+		) {
 			this.currentBoardIndex = boardIndex;
 		} else {
 			this.currentBoardIndex = -1;
@@ -173,8 +177,8 @@ class SuperTicTacToe {
 		return {
 			currentPlayerPiece: this.currentPlayer,
 			currentBoardIndex: this.currentBoardIndex,
-			subGameStates: this.boards.map((board) => board.getState().board),
-			superBoardState: this.superBoard.getState().board,
+			subGameStates: this.boards.map((board) => board.getState()),
+			superBoardState: this.superBoard.getState(),
 		};
 	}
 }
