@@ -11,11 +11,15 @@ class BoardState {
 
 class TicTacToe {
 	constructor() {
-		this.board = Array(9).fill(null);
+		this.board = Array(9).fill(BoardState.UNCLAIMED);
+		this.winState = {
+			player: BoardState.UNCLAIMED,
+			winningComination: null,
+		};
 	}
 
 	makeMove(position, player) {
-		if (this.board[position] === null) {
+		if (this.board[position] === BoardState.UNCLAIMED) {
 			this.board[position] = player;
 			return true;
 		}
@@ -37,7 +41,7 @@ class TicTacToe {
 		winningCombinations.forEach((combination) => {
 			const [a, b, c] = combination;
 			if (
-				this.board[a] &&
+				this.board[a] !== BoardState.UNCLAIMED &&
 				this.board[a] === this.board[b] &&
 				this.board[a] === this.board[c]
 			) {
@@ -49,7 +53,7 @@ class TicTacToe {
 	}
 
 	isDraw() {
-		return this.board.every((cell) => cell !== null)
+		return this.board.every((cell) => cell !== BoardState.UNCLAIMED)
 			? BoardState.DRAW
 			: BoardState.UNCLAIMED;
 	}
@@ -64,10 +68,10 @@ class TicTacToe {
 		if (position < 0 || position > 8) {
 			return {
 				response: false,
-				message: "Invalid position. Must be between 0 and 8.",
+				message: "Invalid position. Must be between 0 and 8",
 			};
 		} else if (this.board[position] !== null) {
-			return { response: false, message: "Position already taken." };
+			return { response: false, message: "Position already taken" };
 		}
 
 		return { response: true, message: "" };
@@ -81,14 +85,22 @@ class SuperTicTacToe {
 			.map(() => new TicTacToe());
 		this.superBoard = new TicTacToe();
 		this.currentPlayer = BoardState.X;
-		this.currentBoardIndex = null;
+		this.currentBoardIndex = -1; // -1 indicates no board is currently selected
 	}
 
 	switchPlayer() {
 		this.currentPlayer = BoardState.getNextPlayer(this.currentPlayer);
 	}
 
-	makeMove(position) {
+	makeMove(position, boardIndex) {
+		if (this.currentBoardIndex === -1) {
+			this.currentBoardIndex = boardIndex;
+		} else if (this.currentBoardIndex !== boardIndex) {
+			throw new Error(
+				`Cannot make a move on board ${boardIndex} when the current board being played is ${this.currentBoardIndex}`,
+			);
+		}
+
 		const board = this.boards[this.currentBoardIndex];
 		const moveResult = board.makeMove(position, this.currentPlayer);
 
@@ -123,33 +135,23 @@ class SuperTicTacToe {
 		if (this.superBoard.checkWinner() === BoardState.UNCLAIMED) {
 			this.currentBoardIndex = boardIndex;
 		} else {
-			this.currentBoardIndex = null;
-		}
-	}
-
-	setBoardIndex(newIndex) {
-		if (this.currentBoardIndex === null) {
-			this.currentBoardIndex = newIndex;
-		} else {
-			throw new Error(
-				`Cannot set board index as the current index is not null. The current index is ${this.boardIndex}.`,
-			);
+			this.currentBoardIndex = -1;
 		}
 	}
 
 	validateMove(boardIndex, position) {
 		if (
-			this.currentBoardIndex !== null &&
+			this.currentBoardIndex !== -1 &&
 			boardIndex !== this.currentBoardIndex
 		) {
 			return {
 				response: false,
-				message: `Cannot make a move on board ${boardIndex} when the current board being played is ${this.currentBoardIndex}.`,
+				message: `Cannot make a move on board ${boardIndex} when the current board being played is ${this.currentBoardIndex}`,
 			};
 		} else if (boardIndex < 0 || boardIndex > 8) {
 			return {
 				response: false,
-				message: "Invalid board index. Must be between 0 and 8.",
+				message: "Invalid board index. Must be between 0 and 8",
 			};
 		}
 

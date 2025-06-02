@@ -208,9 +208,6 @@ function makeMove(
 		return;
 	}
 
-	const room = currentRooms.get(roomID);
-	room.makeMove(io, userID, boardIndex, position);
-
 	logger.info(
 		{
 			roomID: roomID,
@@ -220,6 +217,8 @@ function makeMove(
 		},
 		"Making move",
 	);
+	const room = currentRooms.get(roomID);
+	room.makeMove(io, userID, boardIndex, position);
 }
 
 export { registerUser, createRoom, joinRoom, validateRoomID, makeMove };

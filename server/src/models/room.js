@@ -31,7 +31,7 @@ class Room {
 		this.id = generateRoomID();
 		this.gameMode = gameMode;
 		this.timeLimit = timeLimit;
-		this.game = new SuperTicTacToe(gameMode, timeLimit);
+		this.game = new SuperTicTacToe();
 		this.players = [];
 		this.spectators = [];
 		this.currentTurn = null; // Player who is currently playing
@@ -102,8 +102,8 @@ class Room {
 			return false;
 		}
 
-		this.game.setBoardIndex(boardIndex);
-		this.game.makeMove(boardIndex, position);
+		this.game.makeMove(position, boardIndex);
+
 		const {
 			currentPlayerPiece,
 			currentBoardIndex,
