@@ -1,6 +1,7 @@
 export { default as Board } from "./Board";
-export { default as Cell } from "./Cell";
 export { VerticalDivider, HorizontalDivider } from "./BoardDividers";
+export { default as Cell } from "./Cell";
+export { default as Footer } from "./Footer";
 export { default as GameInfoBar } from "./GameInfoBar";
 export { default as GameInfoColumn } from "./GameInfoColumn";
 export { default as MobileSubBoard } from "./MobileSubBoard";

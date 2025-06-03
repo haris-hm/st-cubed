@@ -2,6 +2,7 @@ import { useContext } from "react";
 
 import { PlayerCard, TimeIndicator } from "./";
 import { SocketContext } from "../../context/Context";
+import { ShareLinkButton } from "../ui";
 
 function GameInfoColumn({ className = "" }) {
 	const { players } = useContext(SocketContext);
@@ -11,7 +12,9 @@ function GameInfoColumn({ className = "" }) {
 
 	return (
 		<div className={`flex flex-col justify-center ${className}`}>
-			<TimeIndicator className="mb-4" />
+			<div className="mb-4 flex w-full flex-row items-center justify-between">
+				<TimeIndicator className="mb-4" />
+			</div>
 			<PlayerCard
 				discordID={firstPlayer.id}
 				avatarHash={firstPlayer.avatarHash}

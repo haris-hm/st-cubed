@@ -5,6 +5,7 @@ export { default as Button } from "./Button";
 export { default as Input } from "./Input";
 export { default as Loading } from "./Loading";
 export { default as Modal } from "./Modal";
+export { default as Popup } from "./Popup";
 export { default as ProfilePicture } from "./ProfilePicture";
 export { SelectorButton, SelectorOption } from "./SelectorButton";
 export { default as ShareLinkButton } from "./ShareLinkButton";

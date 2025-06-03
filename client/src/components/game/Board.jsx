@@ -7,6 +7,7 @@ import {
 	MobileSubBoard,
 	GameInfoBar,
 	GameInfoColumn,
+	Footer,
 } from "./";
 import { useMediaQuery } from "react-responsive";
 import { makeMove } from "../../util/socket/emit";
@@ -113,15 +114,13 @@ function Board() {
 					</div>
 				) : null}
 			</div>
-			<div className="w-full select-none">
-				<MobileSubBoard
-					show={showMobileBoard}
-					boardIndex={mobileBoardIndex}
-					cellStates={cellValues[mobileBoardIndex]}
-					onSelect={handleSubBoardEvent}
-					onClose={handleCloseMobileSubBoard}
-				/>
-			</div>
+			<MobileSubBoard
+				show={showMobileBoard}
+				boardIndex={mobileBoardIndex}
+				cellStates={cellValues[mobileBoardIndex]}
+				onSelect={handleSubBoardEvent}
+				onClose={handleCloseMobileSubBoard}
+			/>
 		</>
 	);
 }
