@@ -4,6 +4,7 @@ import { Cell, VerticalDivider, HorizontalDivider } from "./";
 import { useContext } from "react";
 import { SocketContext, DiscordSDKContext } from "../../context/Context";
 import { getUserId } from "../../util/discord/getUserInfo";
+import { useEffect } from "react";
 
 function SubBoard({
 	onSelect,
@@ -17,15 +18,26 @@ function SubBoard({
 	const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 	const { auth } = useContext(DiscordSDKContext);
 	const {
-		boardState: { currentBoardIndex },
+		boardState: { currentBoardIndex, superBoardState },
 		currentTurn,
 	} = useContext(SocketContext);
 
 	const userID = getUserId(auth);
+	const boardOwner = superBoardState?.board[boardIndex] || "UNCLAIMED";
 
 	const isCurrentTurn = currentTurn === userID;
 	const isCurrentBoard =
 		currentBoardIndex === -1 || currentBoardIndex === boardIndex;
+	const isClaimedBoard = boardOwner !== "UNCLAIMED";
+
+	function resolveClaimedIcon() {
+		if (superBoardState?.board[boardIndex] === "X") {
+			return "/.proxy/icons/cross-secondary-outlined.svg";
+		} else if (superBoardState?.board[boardIndex] === "O") {
+			return "/.proxy/icons/circle-primary-outlined.svg";
+		}
+		return "";
+	}
 
 	function handleCellClick(currentState, position) {
 		if (isMobile && !popup) {
@@ -39,8 +51,14 @@ function SubBoard({
 		<div
 			className={`relative p-4 max-md:p-2 ${popup ? "size-full" : "aspect-square h-full"}`}
 		>
+			<img
+				src={resolveClaimedIcon()}
+				alt="Claimed Board Icon"
+				className={`stroke-light stroke-50 absolute inset-5 z-20 blur-none ${isClaimedBoard ? "" : "hidden"}`}
+				draggable={false}
+			/>
 			<div
-				className={`aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${!popup && isCurrentBoard && isCurrentTurn ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!isCurrentTurn ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-secondary-light/75"}`}`}
+				className={`z-0 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${isClaimedBoard ? "blur-[2px]" : ""} ${!popup && isCurrentBoard && isCurrentTurn ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!isCurrentTurn ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-secondary-light/75"}`}`}
 			>
 				<div className="relative">
 					<VerticalDivider
@@ -66,7 +84,11 @@ function SubBoard({
 								value={currentState}
 								onClick={() => handleCellClick(currentState, i)}
 								popup={popup}
-								isDisabled={!isCurrentBoard || !isCurrentTurn}
+								isDisabled={
+									!isCurrentBoard ||
+									!isCurrentTurn ||
+									isClaimedBoard
+								}
 							/>
 						))}
 					</div>

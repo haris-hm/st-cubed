@@ -73,6 +73,15 @@ class Room {
 				currentTime: this.currentTime,
 			};
 			this.emitMessageToPlayers(io, "start-game", payload);
+
+			const { currentBoardIndex, subGameStates, superBoardState } =
+				this.game.getState();
+			this.emitMessageToPlayers(io, "update-board", {
+				currentTurn: this.currentTurn.getDiscordId(),
+				currentBoardIndex,
+				subGameStates,
+				superBoardState,
+			});
 		}
 	}
 

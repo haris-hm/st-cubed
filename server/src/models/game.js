@@ -122,12 +122,12 @@ class SuperTicTacToe {
 		const moveResult = board.makeMove(position, this.currentPlayer);
 		const winnerResult = moveResult.player;
 
-		if (winnerResult === BoardState.UNCLAIMED) {
-			this.switchPlayer();
-			this.#setNextBoardIndex(position);
-		} else {
+		if (winnerResult !== BoardState.UNCLAIMED) {
 			this.superBoard.makeMove(this.currentBoardIndex, winnerResult);
 		}
+
+		this.switchPlayer();
+		this.#setNextBoardIndex(position);
 
 		return this.getState();
 	}
