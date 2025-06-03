@@ -1,9 +1,11 @@
 export { default as Board } from "./Board";
 export { VerticalDivider, HorizontalDivider } from "./BoardDividers";
 export { default as Cell } from "./Cell";
+export { default as DesktopButtonGroup } from "./DesktopButtonGroup";
 export { default as Footer } from "./Footer";
 export { default as GameInfoBar } from "./GameInfoBar";
 export { default as GameInfoColumn } from "./GameInfoColumn";
+export { default as LeaveGameButton } from "./LeaveGameButton";
 export { default as MobileSubBoard } from "./MobileSubBoard";
 export { default as PlayerCard } from "./PlayerCard";
 export { default as SubBoard } from "./SubBoard";

@@ -105,6 +105,7 @@ function RoomCreator() {
 						text={"Play"}
 						color={"primary"}
 						onClick={handlePlay}
+						className="min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
 					></Button>
 				</Modal>
 			</div>

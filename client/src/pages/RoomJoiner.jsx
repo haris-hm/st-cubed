@@ -154,7 +154,7 @@ function RoomJoiner() {
 						text={"Join"}
 						color={"primary"}
 						onClick={handleJoinRoom}
-						className="mt-7 max-md:mt-5"
+						className="mt-7 min-h-20 w-full max-md:mx-0 max-md:my-3 max-md:mt-5 md:mx-3"
 					/>
 					<p
 						className="text-secondary mt-4 hidden text-center text-xl max-md:text-lg"

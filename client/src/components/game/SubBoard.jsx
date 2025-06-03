@@ -76,7 +76,7 @@ function SubBoard({
 				src={resolveClaimedIcon()}
 				alt="Claimed Board Icon"
 				className={
-					"stroke-light stroke-50 absolute inset-5 z-40 hidden blur-none"
+					"absolute left-1/2 top-1/2 z-40 hidden h-4/5 w-4/5 -translate-x-1/2 -translate-y-1/2 blur-none max-md:h-5/6 max-md:w-5/6"
 				}
 				draggable={false}
 				ref={cellClaimIcon}

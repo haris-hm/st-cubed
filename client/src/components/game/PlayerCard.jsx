@@ -43,7 +43,7 @@ function PlayerCard({
 
 	const nameElement = (
 		<div
-			className={`w-3/4 ${fullHeightName ? "h-20" : `max-2md:w-2/3 flex h-full ${side === "left" ? "pl-4" : "pr-4"}`}`}
+			className={`w-3/4 ${fullHeightName ? "h-20 pl-4" : `max-2md:w-2/3 flex h-full ${side === "left" ? "pl-4" : "pr-4"}`}`}
 		>
 			<div
 				className={`text-primary bg-modal-gray inset-shadow-dark inset-shadow-sm border-primary font-noto-sans flex size-full flex-row items-center justify-between rounded-2xl border-4 text-2xl font-bold md:rounded-full`}

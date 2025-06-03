@@ -52,6 +52,7 @@ function Home() {
 							color="primary"
 							onClick={handleCreateRoom}
 							text="Create Room"
+							className="min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
 						/>
 					</div>
 					<div className="min-w-1/2 max-md:min-w-1/1 px-2">
@@ -59,6 +60,7 @@ function Home() {
 							color="secondary"
 							onClick={handleJoinRoom}
 							text="Join Room"
+							className="min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
 						/>
 					</div>
 				</div>

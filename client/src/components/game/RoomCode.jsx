@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 
 import { Background, Modal, ShareLinkButton } from "../ui";
+import { capitalizeFirstLetters } from "../../util/game/roomCode";
 
 /**
  * Displays the room code to the user so they can share it with a friend.
@@ -17,21 +18,6 @@ import { Background, Modal, ShareLinkButton } from "../ui";
 function RoomCode({ roomId, countdown }) {
 	const shareRef = useRef(null);
 	const countdownRef = useRef(null);
-
-	/**
-	 * Capitalizes the first letter of each word in a string, where words are
-	 * separated by hyphens. Used to format the room ID for display.
-	 *
-	 * @param {string} string - The string which is separated by hyphens.
-	 *
-	 * @returns {string} The formatted string.
-	 */
-	function capitalizeFirstLetters(string) {
-		const words = string.split("-");
-		return words
-			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-			.join("-");
-	}
 
 	/* Toggles visibility of the countdown and the room code, depending on
 	 * the state of the countdown */
@@ -65,7 +51,7 @@ function RoomCode({ roomId, countdown }) {
 								<div className="mt-7 max-md:mt-5 md:ml-4">
 									<ShareLinkButton
 										message={`Come play Super Tic-Tac-Toe with me!\n\nJoin Code: ${capitalizeFirstLetters(roomId)}`}
-									></ShareLinkButton>
+									/>
 								</div>
 							</div>
 						</div>

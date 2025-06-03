@@ -46,7 +46,7 @@ function Cell({
 	}, [value]);
 
 	function handleMouseEnter() {
-		if (previewRef.current && !isDisabled) {
+		if (previewRef.current && !isDisabled && !isMobile) {
 			previewRef.current.classList.remove("hidden");
 		}
 	}

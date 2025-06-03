@@ -16,7 +16,7 @@ function TimeIndicator({ className = "" }) {
 
 	return (
 		<div
-			className={`font-noto-sans text-primary bg-modal-gray border-primary inset-shadow-dark inset-shadow-sm mx-16 flex flex-col items-center rounded-full border-4 px-4 py-2 text-2xl font-bold ${className}`}
+			className={`font-noto-sans text-primary bg-modal-gray border-primary inset-shadow-dark inset-shadow-sm flex flex-col items-center rounded-full border-4 px-4 py-2 text-2xl font-bold ${className}`}
 		>
 			<h1 className="whitespace-nowrap">
 				{minutes && seconds

@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 /**
  * A component which defines the main button style used in the application.
  *
@@ -9,7 +11,13 @@
  *
  * @returns {JSX.Element} The rendered button component.
  */
-function Button({ text, color, onClick, className = "" }) {
+function Button({
+	text = "",
+	color,
+	onClick,
+	className = "",
+	children = null,
+}) {
 	const colorClasses = {
 		primary:
 			"bg-primary hover:bg-primary-light focus:outline-primary-light active:bg-primary",
@@ -17,12 +25,14 @@ function Button({ text, color, onClick, className = "" }) {
 			"bg-secondary hover:bg-secondary-light focus:outline-secondary-light active:bg-secondary",
 	};
 
+	const styles = twMerge(
+		`${colorClasses[color]} active:inset-shadow-sm active:inset-shadow-dark text-light font-noto-sans cursor-pointer select-none rounded-xl text-3xl font-bold focus:outline-2 focus:outline-offset-2 active:brightness-50`,
+		className,
+	);
+
 	return (
-		<button
-			onClick={onClick}
-			className={`${colorClasses[color]} min-w-1/1 active:inset-shadow-sm active:inset-shadow-dark text-light font-noto-sans min-h-20 cursor-pointer select-none rounded-xl text-3xl font-bold focus:outline-2 focus:outline-offset-2 active:brightness-50 max-md:mx-0 max-md:my-3 md:mx-3 ${className}`}
-		>
-			{text}
+		<button onClick={onClick} className={styles}>
+			{children ? <>{children}</> : <>{text}</>}
 		</button>
 	);
 }
