@@ -8,6 +8,7 @@ import {
 	joinRoom,
 	validateRoomID,
 	makeMove,
+	leaveRoom,
 } from "./socket/events.js";
 
 // This holds all socketIds and their corresponding room instance
@@ -49,11 +50,12 @@ function createSocketEndpoints(socket, io) {
 		validateRoomID(context, data, callback);
 	});
 
+	socket.on("leave-room", (callback) => {
+		leaveRoom(context, callback);
+	});
+
 	socket.on("disconnect", () => {
-		logger.info(
-			{ socketID: socket.id },
-			"Client disconnected from websocket",
-		);
+		leaveRoom(context, () => {});
 	});
 }
 

@@ -55,6 +55,31 @@ class Room {
 		return false;
 	}
 
+	removePlayer(discordID) {
+		const index = this.players.findIndex(
+			(p) => p.getDiscordId() === discordID,
+		);
+
+		if (index !== -1) {
+			this.players.splice(index, 1);
+			this.state = "waiting";
+
+			if (
+				this.currentTurn &&
+				this.currentTurn.getDiscordId() === discordID
+			) {
+				this.currentTurn = null;
+			}
+
+			return { success: true, playerCount: this.getPlayerCount() };
+		}
+
+		logger.warn(
+			`Player ${player.getDiscordId()} not found in room ${this.id}.`,
+		);
+		return { success: false, playerCount: this.getPlayerCount() };
+	}
+
 	startGame(io) {
 		if (this.players.length === 2) {
 			this.state = "playing";

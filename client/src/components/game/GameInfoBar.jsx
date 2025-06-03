@@ -20,7 +20,7 @@ function GameInfoBar({ className = "" }) {
 				playPiece={firstPlayer.piece}
 				side="left"
 			/>
-			<TimeIndicator />
+			<TimeIndicator className="mx-4" />
 			<PlayerCard
 				discordID={secondPlayer.id}
 				avatarHash={secondPlayer.avatarHash}

@@ -65,6 +65,7 @@ function joinRoom(roomID, callback) {
 }
 
 /**
+ *	Sends a move to the server for processing.
  *
  * @param {Object} moveInfo - An object containing the move information
  * @param {string} moveInfo.userID - The ID of the user making the move
@@ -76,4 +77,20 @@ function makeMove({ userID, boardIndex, position }, callback) {
 	socket.emit("make-move", { userID, boardIndex, position }, callback);
 }
 
-export { registerUser, createRoom, validateRoomID, joinRoom, makeMove };
+/**
+ * Makes the user leave the current room.
+ *
+ * @param {Function} callback - A callback function to handle the server's response. Takes a boolean, which indicates success or failure.
+ */
+function leaveRoom(callback) {
+	socket.emit("leave-room", callback);
+}
+
+export {
+	registerUser,
+	createRoom,
+	validateRoomID,
+	joinRoom,
+	makeMove,
+	leaveRoom,
+};
