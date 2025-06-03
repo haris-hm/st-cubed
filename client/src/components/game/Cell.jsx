@@ -52,7 +52,10 @@ function Cell({
 	}
 
 	function handleMouseLeave() {
-		if (previewRef.current && !isDisabled) {
+		if (
+			previewRef.current &&
+			!previewRef.current.classList.contains("hidden")
+		) {
 			previewRef.current.classList.add("hidden");
 		}
 	}

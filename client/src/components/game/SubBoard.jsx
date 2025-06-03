@@ -1,10 +1,16 @@
 import { useMediaQuery } from "react-responsive";
 
-import { Cell, VerticalDivider, HorizontalDivider } from "./";
+import {
+	Cell,
+	VerticalDivider,
+	HorizontalDivider,
+	WinnerIndicatorLine,
+} from "./";
 import { useContext } from "react";
 import { SocketContext, DiscordSDKContext } from "../../context/Context";
 import { getUserId } from "../../util/discord/getUserInfo";
-import { useEffect } from "react";
+import { useRef } from "react";
+import { useState } from "react";
 
 function SubBoard({
 	onSelect,
@@ -21,6 +27,9 @@ function SubBoard({
 		boardState: { currentBoardIndex, superBoardState },
 		currentTurn,
 	} = useContext(SocketContext);
+
+	const cellClaimIcon = useRef(null);
+	const [animationPlayed, setAnimationPlayed] = useState(false);
 
 	const userID = getUserId(auth);
 	const boardOwner = superBoardState?.board[boardIndex] || "UNCLAIMED";
@@ -47,6 +56,18 @@ function SubBoard({
 		onSelect(boardIndex, position, currentState);
 	}
 
+	function animateCellPulse() {
+		if (cellClaimIcon.current && !animationPlayed) {
+			setAnimationPlayed(true);
+			cellClaimIcon.current.classList.remove("hidden");
+			cellClaimIcon.current.classList.add("animate-cell-pulse");
+			const animateTimeout = setTimeout(() => {
+				cellClaimIcon.current.classList.remove("animate-pulse");
+				clearTimeout(animateTimeout);
+			}, 250);
+		}
+	}
+
 	return (
 		<div
 			className={`relative p-4 max-md:p-2 ${popup ? "size-full" : "aspect-square h-full"}`}
@@ -54,13 +75,20 @@ function SubBoard({
 			<img
 				src={resolveClaimedIcon()}
 				alt="Claimed Board Icon"
-				className={`stroke-light stroke-50 absolute inset-5 z-20 blur-none ${isClaimedBoard ? "" : "hidden"}`}
+				className={
+					"stroke-light stroke-50 absolute inset-5 z-40 hidden blur-none"
+				}
 				draggable={false}
+				ref={cellClaimIcon}
 			/>
 			<div
-				className={`z-0 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${isClaimedBoard ? "blur-[2px]" : ""} ${!popup && isCurrentBoard && isCurrentTurn ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!isCurrentTurn ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-secondary-light/75"}`}`}
+				className={`z-0 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${animationPlayed ? "blur-[2px]" : "blur-none"} ${!popup && isCurrentBoard && isCurrentTurn ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!isCurrentTurn ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-tertiary-light/75"}`}`}
 			>
 				<div className="relative">
+					<WinnerIndicatorLine
+						boardIndex={boardIndex}
+						triggerAnimation={animateCellPulse}
+					/>
 					<VerticalDivider
 						index={0}
 						className={verticalDividerStyles}

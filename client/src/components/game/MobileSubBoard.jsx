@@ -27,7 +27,7 @@ function MobileSubBoard({ show, onSelect, onClose, cellStates, boardIndex }) {
 
 	return (
 		<div
-			className={`fixed bottom-0 z-20 w-full translate-y-8 ${show ? "animate-fly-in-bottom" : "hidden"}`}
+			className={`z-100 fixed bottom-0 w-full translate-y-8 ${show ? "animate-fly-in-bottom" : "hidden"}`}
 			ref={popupRef}
 		>
 			<div className="jusify-center flex w-full flex-col items-center">

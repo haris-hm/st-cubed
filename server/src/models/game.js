@@ -14,7 +14,7 @@ class TicTacToe {
 		this.board = Array(9).fill(BoardState.UNCLAIMED);
 		this.winState = {
 			player: BoardState.UNCLAIMED,
-			winningComination: null,
+			winningCombination: null,
 		};
 	}
 
@@ -59,7 +59,7 @@ class TicTacToe {
 
 		this.winState = {
 			player: winner,
-			winningComination: winningCombination,
+			winningCombination: winningCombination,
 		};
 	}
 

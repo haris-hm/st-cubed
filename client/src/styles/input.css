@@ -43,6 +43,11 @@
 	--animate-fly-in-bottom: fly-in-bottom 0.3s ease-out;
 	--animate-fly-out-bottom: fly-out-bottom 0.3s ease-in;
 	--animate-cell-pulse: cell-pulse 0.25s ease-in;
+	--animate-winner-line-grow-x: winner-line-grow-x 0.4s
+		cubic-bezier(0.4, 0, 0.2, 1);
+	--animate-winner-line-grow-y: winner-line-grow-y 0.4s
+		cubic-bezier(0.4, 0, 0.2, 1);
+	--animate-blur: animate-blur 0.45s ease-in;
 
 	@keyframes fly-in-bottom {
 		0% {
@@ -75,6 +80,29 @@
 		}
 		100% {
 			transform: scale(1);
+		}
+	}
+
+	@keyframes winner-line-grow-x {
+		0% {
+			transform: scaleX(0);
+			opacity: 0.7;
+		}
+		80% {
+			opacity: 1;
+		}
+		100% {
+			transform: scaleX(1);
+			opacity: 1;
+		}
+	}
+
+	@keyframes animate-blur {
+		0% {
+			filter: blur(0);
+		}
+		100% {
+			filter: blur(2px);
 		}
 	}
 }

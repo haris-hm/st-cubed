@@ -9,3 +9,4 @@ export { default as SubBoard } from "./SubBoard";
 export { default as SubBoardRow } from "./SubBoardRow";
 export { default as TimeIndicator } from "./TimeIndicator";
 export { default as RoomCode } from "./RoomCode";
+export { default as WinnerIndicatorLine } from "./WinnerIndicatorLine";

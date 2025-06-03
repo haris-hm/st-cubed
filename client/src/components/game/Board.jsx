@@ -94,7 +94,7 @@ function Board() {
 							index={1}
 							className={horizontalDividerStyles}
 						/>
-						<div className="grid h-full w-full grid-cols-3 grid-rows-3">
+						<div className="grid aspect-square h-full w-full grid-cols-3 grid-rows-3 place-items-center">
 							{Array.from({ length: 9 }).map((_, i) => (
 								<SubBoard
 									key={i}
