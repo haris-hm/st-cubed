@@ -13,16 +13,21 @@ import { SocketContext } from "../context/Context";
  */
 function GameRoom() {
 	const { roomId } = useParams();
-	const { gameStarted, gameStartCountdown } = useContext(SocketContext);
-
-	if (!gameStarted) {
-		return (
-			<RoomCode roomId={roomId} countdown={gameStartCountdown}></RoomCode>
-		);
-	}
+	const { gameState, gameStartCountdown } = useContext(SocketContext);
 
 	return (
 		<Background>
+			<RoomCode
+				roomId={roomId}
+				countdown={gameStartCountdown}
+				heading={
+					gameState === "waiting"
+						? "Waiting for a friend..."
+						: "Game is paused"
+				}
+				state={gameState}
+				className={`z-100 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}
+			/>
 			<Board />
 		</Background>
 	);

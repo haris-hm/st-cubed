@@ -72,7 +72,7 @@ function registerUser(
  * an error during room creation, it will be called with null.
  */
 function createRoom(
-	{ socket, currentUsers, currentRooms },
+	{ socket, io, currentUsers, currentRooms },
 	{ gameMode, timeLimit, discordId, username },
 	callback,
 ) {
@@ -100,7 +100,7 @@ function createRoom(
 	const room = new Room(gameMode, timeLimit);
 	const roomID = room.getID();
 
-	room.addPlayer(user.getPlayer("X"));
+	room.addPlayer(io, user.getPlayer("X"));
 	user.joinRoom(roomID);
 	socket.join(roomID);
 	currentRooms.set(roomID, room);
@@ -152,12 +152,16 @@ function joinRoom(
 		callback(false);
 	}
 
-	room.addPlayer(user.getPlayer("O"));
+	if (room.getPlayerCount() < 2) {
+		room.addPlayer(io, user.getPlayer("O"));
+	} else {
+		room.addSpectator(io, user);
+	}
+
 	user.joinRoom(roomID);
 	socket.join(roomID);
 
 	callback(true);
-	emitGameStartSequence({ io, currentRooms, roomID });
 
 	logger.info({ roomID: roomID, socketID: socketId }, "Client joined room");
 }
@@ -237,13 +241,14 @@ function makeMove(
  *
  * @param {Object} context - Context object containing shared resources.
  * @param {Socket} context.socket - The socket object for the current connection.
+ * @param {Server} context.io - The Socket.IO server instance.
  * @param {Map<string, User>} context.currentUsers - Map to store information about currently connected users.
  * @param {Map<string, Room>} context.currentRooms - Map to store information about currently active rooms.
  *
  * @param {Function} callback - A required function that will be called with a boolean indicating success or failure of leaving the game.
  * @returns
  */
-function leaveRoom({ socket, currentUsers, currentRooms }, callback) {
+function leaveRoom({ socket, io, currentUsers, currentRooms }, callback) {
 	const user = currentUsers.get(socket.id);
 
 	if (!user) {
@@ -268,7 +273,7 @@ function leaveRoom({ socket, currentUsers, currentRooms }, callback) {
 		return;
 	}
 
-	const { success, playerCount } = room.removePlayer(user.getDiscordId());
+	const { success, playerCount } = room.removePlayer(io, user.getDiscordId());
 
 	if (success) {
 		logger.info(

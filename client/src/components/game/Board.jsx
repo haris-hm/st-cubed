@@ -22,7 +22,7 @@ function Board() {
 	const [mobileBoardIndex, setMobileBoardIndex] = useState(null);
 
 	const { auth } = useContext(DiscordSDKContext);
-	const { currentTurn, boardState } = useContext(SocketContext);
+	const { currentTurn, boardState, gameState } = useContext(SocketContext);
 
 	const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
@@ -75,7 +75,9 @@ function Board() {
 
 	return (
 		<>
-			<div className="flex size-full select-none flex-col p-5 max-sm:p-3">
+			<div
+				className={`flex size-full select-none flex-col p-5 max-sm:p-3 ${gameState === "paused" || gameState === "waiting" ? "opacity-90 blur-[4px]" : ""}`}
+			>
 				{!isMobile ? <GameInfoBar className="pb-4" /> : null}
 				<div className="max-md:mt-15 flex items-center justify-center">
 					<div className="relative mx-auto aspect-square max-h-[calc(100vh-120px-2.5rem)] w-full max-w-[min(100vw,100vh-120px)]">

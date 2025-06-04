@@ -8,7 +8,7 @@ function TimeIndicator({ className = "" }) {
 	let minutes = null;
 	let seconds = null;
 
-	if (currentTime !== -1) {
+	if (currentTime !== -1 && currentTime !== null) {
 		const dateSeconds = new Date(currentTime * 1000);
 		minutes = dateSeconds.getMinutes().toString().padStart(2, "0");
 		seconds = dateSeconds.getSeconds().toString().padStart(2, "0");

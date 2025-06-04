@@ -8,18 +8,21 @@ export const socketEvents = ({ setValue }) => {
 		});
 	});
 
-	socket.on("start-game", ({ roomID, players, currentTurn, currentTime }) => {
-		setValue((state) => {
-			return {
-				...state,
-				roomID,
-				gameStarted: true,
-				players,
-				currentTurn,
-				currentTime,
-			};
-		});
-	});
+	socket.on(
+		"start-game",
+		({ roomID, gameState, players, currentTurn, currentTime }) => {
+			setValue((state) => {
+				return {
+					...state,
+					roomID,
+					gameState,
+					players,
+					currentTurn,
+					currentTime,
+				};
+			});
+		},
+	);
 
 	socket.on(
 		"update-board",
@@ -38,6 +41,21 @@ export const socketEvents = ({ setValue }) => {
 						subGameStates,
 						superBoardState,
 					},
+				};
+			});
+		},
+	);
+
+	socket.on(
+		"pause-game",
+		({ gameState, currentTurn, gameStartCountdown, players }) => {
+			setValue((state) => {
+				return {
+					...state,
+					gameState,
+					currentTurn,
+					gameStartCountdown,
+					players,
 				};
 			});
 		},

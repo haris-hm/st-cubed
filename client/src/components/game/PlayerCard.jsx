@@ -10,10 +10,19 @@ function PlayerCard({
 	side = "left",
 	className = "",
 	fullHeightName = false,
+	skeleton = false,
 }) {
 	const { currentTurn } = useContext(SocketContext);
 
-	const avatarElement = (
+	const avatarElement = skeleton ? (
+		<div
+			className={`flex flex-row ${fullHeightName ? "w-1/4 justify-center" : `max-2md:w-1/3 w-1/4 ${side === "left" ? "justify-end" : "justify-start"}`}`}
+		>
+			<div
+				className={`border-light size-20 animate-pulse rounded-full border-4 bg-gray-400`}
+			/>
+		</div>
+	) : (
 		<div
 			className={`flex flex-row ${fullHeightName ? "w-1/4 justify-center" : `max-2md:w-1/3 w-1/4 ${side === "left" ? "justify-end" : "justify-start"}`}`}
 		>
@@ -25,15 +34,26 @@ function PlayerCard({
 		</div>
 	);
 
-	const displayNameText = (
+	const displayNameText = skeleton ? (
+		<div
+			className={`px-4 py-2 ${fullHeightName ? "" : "max-2md:w-[5em] 2md:max-w-3/4 truncate text-ellipsis break-all"}`}
+		>
+			<div className="size-full animate-pulse rounded-full bg-gray-400">
+				<p className="invisible">Placeholder Name</p>
+			</div>
+		</div>
+	) : (
 		<p
 			className={`px-4 py-2 ${fullHeightName ? "" : "max-2md:w-[5em] 2md:max-w-3/4 truncate text-ellipsis break-all"}`}
 		>
 			{displayName}
 		</p>
 	);
-
-	const playPieceIndicator = (
+	const playPieceIndicator = skeleton ? (
+		<div
+			className={`size-10 animate-pulse rounded-2xl bg-gray-400 py-2 ${side === "left" ? "mr-4" : "ml-4"}`}
+		></div>
+	) : (
 		<img
 			src={`/.proxy/icons/${playPiece === "X" ? "cross-secondary" : "circle-primary"}.svg`}
 			alt={playPiece}

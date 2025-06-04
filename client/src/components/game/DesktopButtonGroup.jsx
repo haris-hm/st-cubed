@@ -1,6 +1,6 @@
 import { ShareLinkButton } from "../ui";
 import { LeaveGameButton } from ".";
-import { capitalizeFirstLetters } from "../../util/game/roomCode";
+import { capitalizeFirstLetters } from "../../util/game/roomInfo";
 import { useContext } from "react";
 import { SocketContext } from "../../context/Context";
 

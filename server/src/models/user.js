@@ -32,8 +32,7 @@ class User {
 
 	getCurrentRoom() {
 		if (!this.currentRoom) {
-			logger.error("User is not in a room");
-			throw new Error("User is not in a room");
+			return null;
 		}
 		return this.currentRoom;
 	}

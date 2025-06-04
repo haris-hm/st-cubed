@@ -2,18 +2,18 @@ import { useContext } from "react";
 
 import { PlayerCard, TimeIndicator } from "./";
 import { SocketContext } from "../../context/Context";
+import { resolvePlayerInfo } from "../../util/game/roomInfo";
 
 function GameInfoBar({ className = "" }) {
 	const { players } = useContext(SocketContext);
-
-	const firstPlayer = players[0];
-	const secondPlayer = players[1];
+	const { firstPlayer, secondPlayer } = resolvePlayerInfo(players);
 
 	return (
 		<div
 			className={`flex w-full flex-row items-center justify-between ${className}`}
 		>
 			<PlayerCard
+				skeleton={firstPlayer.id === null}
 				discordID={firstPlayer.id}
 				avatarHash={firstPlayer.avatarHash}
 				displayName={firstPlayer.displayName}
@@ -22,6 +22,7 @@ function GameInfoBar({ className = "" }) {
 			/>
 			<TimeIndicator className="mx-4" />
 			<PlayerCard
+				skeleton={secondPlayer.id === null}
 				discordID={secondPlayer.id}
 				avatarHash={secondPlayer.avatarHash}
 				displayName={secondPlayer.displayName}

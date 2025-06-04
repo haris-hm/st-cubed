@@ -17,7 +17,8 @@ import { SocketContext } from "./Context";
 function SocketProvider({ children }) {
 	const [value, setValue] = useState({
 		roomID: null,
-		gameStarted: false,
+		gameState: "waiting",
+		gameStartCountdown: null,
 		players: [],
 		currentTurn: null,
 		currentTime: null,

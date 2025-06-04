@@ -8,7 +8,8 @@ export const DiscordSDKContext = createContext(null);
 
 export const SocketContext = createContext({
 	roomID: null,
-	gameStarted: false,
+	gameState: "waiting",
+	gameStartCountdown: null,
 	players: [],
 	currentTurn: null,
 	currentTime: null,

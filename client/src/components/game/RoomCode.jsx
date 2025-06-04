@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 
 import { Background, Modal, ShareLinkButton } from "../ui";
-import { capitalizeFirstLetters } from "../../util/game/roomCode";
+import { capitalizeFirstLetters } from "../../util/game/roomInfo";
 
 /**
  * Displays the room code to the user so they can share it with a friend.
@@ -12,12 +12,16 @@ import { capitalizeFirstLetters } from "../../util/game/roomCode";
  * @param {Object} props - The props for the RoomCode component.
  * @param {string} props.roomId - The ID of the room.
  * @param {number} props.countdown - The current value of the countdown timer in seconds.
+ * @param {string} props.state - The current state of the game (e.g., "waiting", "playing").
+ * @param {string} [props.heading] - An optional prop to customize the heading text. If not provided, defaults to "Waiting for a friend...".
+ * @param {string} [props.className] - Optional additional class names for styling.
  *
  * @returns {JSX.Element} - The rendered RoomCode component.
  */
-function RoomCode({ roomId, countdown }) {
+function RoomCode({ roomId, countdown, state, heading = "", className = "" }) {
 	const shareRef = useRef(null);
 	const countdownRef = useRef(null);
+	const codeModal = useRef(null);
 
 	/* Toggles visibility of the countdown and the room code, depending on
 	 * the state of the countdown */
@@ -29,44 +33,45 @@ function RoomCode({ roomId, countdown }) {
 			shareRef.current.classList.remove("hidden");
 			countdownRef.current.classList.add("hidden");
 		}
-	}, [countdown]);
+
+		console.log("Game state:", state);
+
+		if (state === "playing" && codeModal?.current) {
+			codeModal.current.classList.add("hidden");
+		} else {
+			codeModal.current.classList.remove("hidden");
+		}
+	}, [countdown, state]);
 
 	return (
-		<Background>
-			<div className="font-noto-sans text-primary min-w-screen flex min-h-screen select-none flex-col items-center justify-center">
-				<div className="max-md:max-w-8/10 flex flex-col items-center justify-center">
-					<Modal>
-						<div ref={shareRef}>
-							<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
-								Waiting for a friend...
-							</h1>
-							<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
-								Share the following code and have your friend
-								join!
-							</h2>
-							<div className="flex flex-row items-center justify-center max-md:flex-col">
-								<h1 className="mt-5 text-5xl font-black max-md:text-3xl">
-									{capitalizeFirstLetters(roomId)}
-								</h1>
-								<div className="mt-7 max-md:mt-5 md:ml-4">
-									<ShareLinkButton
-										message={`Come play Super Tic-Tac-Toe with me!\n\nJoin Code: ${capitalizeFirstLetters(roomId)}`}
-									/>
-								</div>
-							</div>
-						</div>
-						<div ref={countdownRef}>
-							<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
-								Second player joined!
-							</h1>
-							<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
-								Starting in {countdown} seconds...
-							</h2>
-						</div>
-					</Modal>
+		<Modal className={`text-primary ${className}`} ref={codeModal}>
+			<div ref={shareRef}>
+				<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
+					{heading || "Waiting for a friend..."}
+				</h1>
+				<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
+					Share the following code and have your friend join!
+				</h2>
+				<div className="flex flex-row items-center justify-center max-md:flex-col">
+					<h1 className="mt-5 text-5xl font-black max-md:text-3xl">
+						{capitalizeFirstLetters(roomId)}
+					</h1>
+					<div className="mt-7 max-md:mt-5 md:ml-4">
+						<ShareLinkButton
+							message={`Come play Super Tic-Tac-Toe with me!\n\nJoin Code: ${capitalizeFirstLetters(roomId)}`}
+						/>
+					</div>
 				</div>
 			</div>
-		</Background>
+			<div ref={countdownRef}>
+				<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
+					Second player joined!
+				</h1>
+				<h2 className="text-active-text text-2xl font-medium max-md:text-lg">
+					Starting in {countdown} seconds...
+				</h2>
+			</div>
+		</Modal>
 	);
 }
 

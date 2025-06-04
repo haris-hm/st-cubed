@@ -37,11 +37,23 @@ class Room {
 		this.currentTurn = null; // Player who is currently playing
 		this.currentTime = this.timeLimit === "unlimited" ? -1 : this.timeLimit; // Current time in seconds
 		this.state = "waiting"; // waiting, playing, finished
+		this.startCountdownLength = 3;
 	}
 
-	addPlayer(player) {
-		if (this.players.length < 2) {
+	addPlayer(io, player) {
+		if (this.players.length < 2 && this.state !== "playing") {
 			this.players.push(player);
+
+			if (this.players.length === 2) {
+				switch (this.state) {
+					case "waiting":
+						this.startGameSequence(io);
+						break;
+					case "paused":
+						this.resumeGame(io);
+						break;
+				}
+			}
 			return true;
 		}
 		return false;
@@ -55,14 +67,13 @@ class Room {
 		return false;
 	}
 
-	removePlayer(discordID) {
+	removePlayer(io, discordID) {
 		const index = this.players.findIndex(
 			(p) => p.getDiscordId() === discordID,
 		);
 
 		if (index !== -1) {
 			this.players.splice(index, 1);
-			this.state = "waiting";
 
 			if (
 				this.currentTurn &&
@@ -71,13 +82,74 @@ class Room {
 				this.currentTurn = null;
 			}
 
+			if (this.getPlayerCount() > 0) {
+				this.pauseGame(io);
+			}
+
 			return { success: true, playerCount: this.getPlayerCount() };
 		}
 
-		logger.warn(
-			`Player ${player.getDiscordId()} not found in room ${this.id}.`,
-		);
+		logger.warn(`Player ${discordID} not found in room ${this.id}.`);
 		return { success: false, playerCount: this.getPlayerCount() };
+	}
+
+	serializePlayers() {
+		return this.players.map((player) => ({
+			id: player.getDiscordId(),
+			username: player.getUsername(),
+			displayName: player.getDisplayName(),
+			avatarHash: player.getAvatarHash(),
+			piece: player.getPlayPiece(),
+		}));
+	}
+
+	pauseGame(io) {
+		if (this.state === "playing") {
+			this.state = "paused";
+			this.emitMessageToPlayers(io, "pause-game", {
+				gameState: this.state,
+				currentTurn: this.currentTurn,
+				players: this.serializePlayers(),
+				gameStartCountdown: null,
+			});
+		}
+	}
+
+	resumeGame(io) {
+		if (this.state === "paused") {
+			this.state = "playing";
+			if (!this.currentTurn) {
+				this.currentTurn = this.players[1]; // Set to the player who just joined
+			}
+			this.emitMessageToPlayers(io, "resume-game", {
+				gameState: this.state,
+				currentTurn: this.currentTurn.getDiscordId(),
+				players: this.serializePlayers(),
+				currentTime: this.currentTime,
+			});
+		}
+	}
+
+	startGameSequence(io) {
+		let countdown = this.startCountdownLength;
+
+		this.emitMessageToPlayers(io, "update-start-countdown", {
+			gameStartCountdown: countdown,
+		});
+
+		const emissionInterval = setInterval(() => {
+			countdown--;
+
+			if (countdown === 0) {
+				clearInterval(emissionInterval);
+				this.startGame(io);
+				logger.info({ roomID: this.id }, "Game started");
+			} else {
+				this.emitMessageToPlayers(io, "update-start-countdown", {
+					gameStartCountdown: countdown,
+				});
+			}
+		}, 1000);
 	}
 
 	startGame(io) {
@@ -87,13 +159,8 @@ class Room {
 
 			const payload = {
 				roomID: this.id,
-				players: this.players.map((player) => ({
-					id: player.getDiscordId(),
-					username: player.getUsername(),
-					displayName: player.getDisplayName(),
-					avatarHash: player.getAvatarHash(),
-					piece: player.getPlayPiece(),
-				})),
+				gameState: this.state,
+				players: this.serializePlayers(),
 				currentTurn: this.currentTurn.getDiscordId(),
 				currentTime: this.currentTime,
 			};
@@ -190,6 +257,10 @@ class Room {
 
 	getSpectatorCount() {
 		return this.spectators.length;
+	}
+
+	getState() {
+		return this.state;
 	}
 }
 
