@@ -55,7 +55,7 @@ function createSocketEndpoints(socket, io) {
 	});
 
 	socket.on("disconnect", () => {
-		leaveRoom(context, () => {});
+		leaveRoom(context, () => {}, true);
 	});
 }
 

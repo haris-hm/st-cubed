@@ -60,4 +60,19 @@ export const socketEvents = ({ setValue }) => {
 			});
 		},
 	);
+
+	socket.on(
+		"resume-game",
+		({ gameState, currentTurn, players, currentTime }) => {
+			setValue((state) => {
+				return {
+					...state,
+					gameState,
+					currentTurn,
+					players,
+					currentTime,
+				};
+			});
+		},
+	);
 };

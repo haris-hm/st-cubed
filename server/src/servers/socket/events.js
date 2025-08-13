@@ -3,7 +3,6 @@ import { Socket, Server } from "socket.io";
 import logger from "../../models/logger.js";
 import { Room } from "../../models/room.js";
 import { User } from "../../models/user.js";
-import { emitGameStartSequence } from "./emit.js";
 
 /**
  * Event to create a new user and register them in a map.
@@ -100,9 +99,9 @@ function createRoom(
 	const room = new Room(gameMode, timeLimit);
 	const roomID = room.getID();
 
-	room.addPlayer(io, user.getPlayer("X"));
-	user.joinRoom(roomID);
 	socket.join(roomID);
+	room.addPlayer(io, user);
+	user.joinRoom(roomID);
 	currentRooms.set(roomID, room);
 
 	logger.info(
@@ -152,14 +151,15 @@ function joinRoom(
 		callback(false);
 	}
 
+	socket.join(roomID);
+
 	if (room.getPlayerCount() < 2) {
-		room.addPlayer(io, user.getPlayer("O"));
+		room.addPlayer(io, user);
 	} else {
 		room.addSpectator(io, user);
 	}
 
 	user.joinRoom(roomID);
-	socket.join(roomID);
 
 	callback(true);
 
@@ -246,9 +246,14 @@ function makeMove(
  * @param {Map<string, Room>} context.currentRooms - Map to store information about currently active rooms.
  *
  * @param {Function} callback - A required function that will be called with a boolean indicating success or failure of leaving the game.
+ * @param {boolean} [disconnected=false] - Optional flag indicating if the user disconnected completely from the activity.
  * @returns
  */
-function leaveRoom({ socket, io, currentUsers, currentRooms }, callback) {
+function leaveRoom(
+	{ socket, io, currentUsers, currentRooms },
+	callback,
+	disconnected = false,
+) {
 	const user = currentUsers.get(socket.id);
 
 	if (!user) {
@@ -266,6 +271,7 @@ function leaveRoom({ socket, io, currentUsers, currentRooms }, callback) {
 	}
 
 	socket.leave(roomID);
+
 	const room = currentRooms.get(roomID);
 	if (!room) {
 		logger.error({ roomID: roomID }, "Room not found");
@@ -273,7 +279,14 @@ function leaveRoom({ socket, io, currentUsers, currentRooms }, callback) {
 		return;
 	}
 
-	const { success, playerCount } = room.removePlayer(io, user.getDiscordId());
+	const { success, playerCount } = room.handlePlayerLeave(
+		io,
+		user.getDiscordId(),
+	);
+
+	if (disconnected) {
+		currentUsers.delete(socket.id);
+	}
 
 	if (success) {
 		logger.info(

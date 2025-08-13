@@ -69,10 +69,19 @@ class Player extends User {
 	) {
 		super(discordId, socketId, username, displayName, avatarHash);
 		this.playPiece = playPiece; // X or O
+		this.active = false;
+	}
+
+	setActive(active) {
+		this.active = active;
 	}
 
 	getPlayPiece() {
 		return this.playPiece;
+	}
+
+	isActive() {
+		return this.active;
 	}
 }
 

@@ -29,34 +29,56 @@ function generateRoomID() {
 class Room {
 	constructor(gameMode, timeLimit) {
 		this.id = generateRoomID();
+
+		this.game = new SuperTicTacToe();
 		this.gameMode = gameMode;
 		this.timeLimit = timeLimit;
-		this.game = new SuperTicTacToe();
-		this.players = [];
+
+		this.playerX = null;
+		this.playerO = null;
+		this.lastJoinedPlayer = null;
 		this.spectators = [];
+
 		this.currentTurn = null; // Player who is currently playing
 		this.currentTime = this.timeLimit === "unlimited" ? -1 : this.timeLimit; // Current time in seconds
+
 		this.state = "waiting"; // waiting, playing, finished
 		this.startCountdownLength = 3;
 	}
 
-	addPlayer(io, player) {
-		if (this.players.length < 2 && this.state !== "playing") {
-			this.players.push(player);
-
-			if (this.players.length === 2) {
-				switch (this.state) {
-					case "waiting":
-						this.startGameSequence(io);
-						break;
-					case "paused":
-						this.resumeGame(io);
-						break;
-				}
-			}
-			return true;
+	addPlayer(io, user) {
+		if (this.state === "playing") {
+			logger.warn(
+				`Player ${player.getDiscordId()} attempted to join room ${this.id} while it was in progress.`,
+			);
+			return false;
 		}
-		return false;
+
+		if (this.playerX === null) {
+			this.playerX = user.getPlayer("X");
+			this.lastJoinedPlayer = 1;
+		} else if (this.playerO === null) {
+			this.playerO = user.getPlayer("O");
+			this.lastJoinedPlayer = 2;
+		} else {
+			logger.warn(
+				`Room ${this.id} is full. Player ${player.getDiscordId()} cannot join.`,
+			);
+			return false;
+		}
+
+		if (this.getPlayerCount() === 2) {
+			switch (this.state) {
+				case "waiting":
+					this.startGameSequence(io);
+					break;
+				case "paused":
+					this.resumeGame(io);
+					break;
+			}
+		}
+
+		return true;
 	}
 
 	addSpectator(spectator) {
@@ -67,14 +89,25 @@ class Room {
 		return false;
 	}
 
-	removePlayer(io, discordID) {
-		const index = this.players.findIndex(
-			(p) => p.getDiscordId() === discordID,
-		);
+	addUser(io, user) {
+		if (this.getPlayerCount() >= 2) {
+			this.addSpectator(user);
+		} else {
+			this.addPlayer(io, user);
+		}
+	}
 
-		if (index !== -1) {
-			this.players.splice(index, 1);
+	handlePlayerLeave(io, discordID) {
+		if (this.playerX && this.playerX.getDiscordId() === discordID) {
+			this.playerX = null;
+		} else if (this.playerO && this.playerO.getDiscordId() === discordID) {
+			this.playerO = null;
+		} else {
+			logger.warn(`Player ${discordID} not found in room ${this.id}.`);
+			return { success: false, playerCount: this.getPlayerCount() };
+		}
 
+		if (this.state === "playing" && this.getPlayerCount() > 0) {
 			if (
 				this.currentTurn &&
 				this.currentTurn.getDiscordId() === discordID
@@ -82,36 +115,26 @@ class Room {
 				this.currentTurn = null;
 			}
 
-			if (this.getPlayerCount() > 0) {
-				this.pauseGame(io);
-			}
-
-			return { success: true, playerCount: this.getPlayerCount() };
+			this.pauseGame(io);
 		}
 
-		logger.warn(`Player ${discordID} not found in room ${this.id}.`);
-		return { success: false, playerCount: this.getPlayerCount() };
-	}
-
-	serializePlayers() {
-		return this.players.map((player) => ({
-			id: player.getDiscordId(),
-			username: player.getUsername(),
-			displayName: player.getDisplayName(),
-			avatarHash: player.getAvatarHash(),
-			piece: player.getPlayPiece(),
-		}));
+		return { success: true, playerCount: this.getPlayerCount() };
 	}
 
 	pauseGame(io) {
 		if (this.state === "playing") {
 			this.state = "paused";
-			this.emitMessageToPlayers(io, "pause-game", {
+
+			const payload = {
 				gameState: this.state,
-				currentTurn: this.currentTurn,
+				currentTurn: this.currentTurn
+					? this.currentTurn.getDiscordId()
+					: null,
 				players: this.serializePlayers(),
 				gameStartCountdown: null,
-			});
+			};
+
+			this.emitMessageToPlayers(io, "pause-game", payload);
 		}
 	}
 
@@ -119,14 +142,20 @@ class Room {
 		if (this.state === "paused") {
 			this.state = "playing";
 			if (!this.currentTurn) {
-				this.currentTurn = this.players[1]; // Set to the player who just joined
+				// If there is no current turn, set it to the last joined player
+				this.currentTurn =
+					this.lastJoinedPlayer === 1 ? this.playerX : this.playerO;
 			}
-			this.emitMessageToPlayers(io, "resume-game", {
+
+			const payload = {
 				gameState: this.state,
 				currentTurn: this.currentTurn.getDiscordId(),
 				players: this.serializePlayers(),
 				currentTime: this.currentTime,
-			});
+			};
+
+			this.emitMessageToPlayers(io, "resume-game", payload);
+			this.sendBoardUpdate(io);
 		}
 	}
 
@@ -153,9 +182,9 @@ class Room {
 	}
 
 	startGame(io) {
-		if (this.players.length === 2) {
+		if (this.getPlayerCount() === 2) {
 			this.state = "playing";
-			this.currentTurn = this.players[0];
+			this.currentTurn = this.playerX;
 
 			const payload = {
 				roomID: this.id,
@@ -165,16 +194,21 @@ class Room {
 				currentTime: this.currentTime,
 			};
 			this.emitMessageToPlayers(io, "start-game", payload);
-
-			const { currentBoardIndex, subGameStates, superBoardState } =
-				this.game.getState();
-			this.emitMessageToPlayers(io, "update-board", {
-				currentTurn: this.currentTurn.getDiscordId(),
-				currentBoardIndex,
-				subGameStates,
-				superBoardState,
-			});
+			this.sendBoardUpdate(io);
 		}
+	}
+
+	sendBoardUpdate(io) {
+		const { currentBoardIndex, subGameStates, superBoardState } =
+			this.game.getState();
+		const payload = {
+			currentTurn: this.currentTurn.getDiscordId(),
+			currentBoardIndex,
+			subGameStates,
+			superBoardState,
+		};
+
+		this.emitMessageToPlayers(io, "update-board", payload);
 	}
 
 	validateMoveData(userID, boardIndex, position) {
@@ -229,7 +263,7 @@ class Room {
 	}
 
 	setCurrentTurn(playPiece) {
-		const nextPlayer = this.players.find(
+		const nextPlayer = this.getPlayers().find(
 			(player) => player.getPlayPiece() === playPiece,
 		);
 		if (nextPlayer) {
@@ -247,12 +281,26 @@ class Room {
 		}
 	}
 
+	serializePlayers() {
+		return this.getPlayers().map((player) => ({
+			id: player.getDiscordId(),
+			username: player.getUsername(),
+			displayName: player.getDisplayName(),
+			avatarHash: player.getAvatarHash(),
+			piece: player.getPlayPiece(),
+		}));
+	}
+
 	getID() {
 		return this.id;
 	}
 
+	getPlayers() {
+		return [this.playerX, this.playerO].filter(Boolean);
+	}
+
 	getPlayerCount() {
-		return this.players.length;
+		return this.getPlayers().length;
 	}
 
 	getSpectatorCount() {
