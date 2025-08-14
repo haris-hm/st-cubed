@@ -219,6 +219,13 @@ class Room {
 			return false;
 		}
 
+		if (this.state !== "playing") {
+			logger.warn(
+				`Player ${userID} attempted to make a move in room ${this.id} while it was not in progress.`,
+			);
+			return false;
+		}
+
 		const validMove = this.game.validateMove(boardIndex, position);
 
 		if (!validMove.response) {

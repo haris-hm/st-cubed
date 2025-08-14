@@ -65,7 +65,11 @@ function Board() {
 
 		const userID = getUserId(auth);
 
-		if (currentState === null && currentTurn === userID) {
+		if (
+			currentState === null &&
+			currentTurn === userID &&
+			gameState === "playing"
+		) {
 			console.log(
 				`Making move at board ${boardIndex}, position ${position} for user ${userID}`,
 			);
