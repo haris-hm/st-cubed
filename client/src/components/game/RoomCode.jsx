@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-import { Background, Modal, ShareLinkButton } from "../ui";
+import { Modal, ShareLinkButton } from "../ui";
 import { capitalizeFirstLetters } from "../../util/game/roomInfo";
 
 /**
@@ -34,13 +34,10 @@ function RoomCode({ roomId, countdown, state, heading = "", className = "" }) {
 			countdownRef.current.classList.add("hidden");
 		}
 
-		console.log("Game state:", state);
-
-		if (state === "playing" && codeModal?.current) {
-			codeModal.current.classList.add("hidden");
-		} else {
-			codeModal.current.classList.remove("hidden");
-		}
+		codeModal?.current?.classList.toggle(
+			"hidden",
+			state === "playing" || state === "finished",
+		);
 	}, [countdown, state]);
 
 	return (

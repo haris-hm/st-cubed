@@ -27,6 +27,7 @@ function SocketProvider({ children }) {
 			subGameStates: null,
 			superBoardState: null,
 		},
+		winner: null,
 	});
 
 	useEffect(() => {

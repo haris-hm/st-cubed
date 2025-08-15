@@ -75,4 +75,10 @@ export const socketEvents = ({ setValue }) => {
 			});
 		},
 	);
+
+	socket.on("game-finished", ({ gameState, winner }) => {
+		setValue((state) => {
+			return { ...state, gameState, winner };
+		});
+	});
 };

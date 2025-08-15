@@ -6,11 +6,9 @@ import {
 	HorizontalDivider,
 	WinnerIndicatorLine,
 } from "./";
-import { useContext } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { SocketContext, DiscordSDKContext } from "../../context/Context";
 import { getUserId } from "../../util/discord/getUserInfo";
-import { useRef } from "react";
-import { useState } from "react";
 
 function SubBoard({
 	onSelect,
@@ -26,6 +24,7 @@ function SubBoard({
 	const {
 		boardState: { currentBoardIndex, superBoardState, subGameStates },
 		currentTurn,
+		gameState,
 	} = useContext(SocketContext);
 
 	const cellClaimIcon = useRef(null);
@@ -34,10 +33,18 @@ function SubBoard({
 	const userID = getUserId(auth);
 	const boardOwner = superBoardState?.board[boardIndex] || "UNCLAIMED";
 
-	const isCurrentTurn = currentTurn === userID;
 	const isCurrentBoard =
 		currentBoardIndex === -1 || currentBoardIndex === boardIndex;
 	const isClaimedBoard = boardOwner !== "UNCLAIMED";
+
+	const isCurrentTurn = currentTurn === userID;
+	const canMakeMove = useRef(isCurrentTurn && gameState === "playing");
+
+	useEffect(() => {
+		if (canMakeMove) {
+			canMakeMove.current = isCurrentTurn && gameState === "playing";
+		}
+	}, [gameState, isCurrentTurn]);
 
 	function resolveClaimedIcon() {
 		if (superBoardState?.board[boardIndex] === "X") {
@@ -82,7 +89,7 @@ function SubBoard({
 				ref={cellClaimIcon}
 			/>
 			<div
-				className={`z-0 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${animationPlayed ? "blur-[2px]" : "blur-none"} ${!popup && isCurrentBoard && isCurrentTurn ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!isCurrentTurn ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-tertiary-light/75"}`}`}
+				className={`z-0 aspect-square size-full rounded-2xl p-2 max-md:rounded-lg max-md:p-0.5 ${animationPlayed ? "blur-[2px]" : "blur-none"} ${!popup && isCurrentBoard && canMakeMove?.current ? "hover:bg-modal-gray hover:outline-primary hover:outline-4" : ""} ${!canMakeMove?.current ? "bg-gray-400/75" : `${isCurrentBoard ? "bg-modal-gray/75" : "bg-tertiary-light/75"}`}`}
 			>
 				<div className="relative">
 					<WinnerIndicatorLine
@@ -116,7 +123,7 @@ function SubBoard({
 								popup={popup}
 								isDisabled={
 									!isCurrentBoard ||
-									!isCurrentTurn ||
+									!canMakeMove.current ||
 									isClaimedBoard
 								}
 							/>

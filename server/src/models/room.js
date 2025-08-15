@@ -253,6 +253,13 @@ class Room {
 
 		const turnSet = this.setCurrentTurn(currentPlayerPiece);
 
+		if (
+			superBoardState?.winState?.winningCombination &&
+			this.state === "playing"
+		) {
+			this.state = "finished";
+		}
+
 		if (turnSet) {
 			this.emitMessageToPlayers(io, "update-board", {
 				currentTurn: this.currentTurn.getDiscordId(),
@@ -260,6 +267,13 @@ class Room {
 				subGameStates,
 				superBoardState,
 			});
+
+			if (this.state === "finished")
+				this.emitMessageToPlayers(io, "game-finished", {
+					gameState: this.state,
+					winner: this.currentTurn,
+				});
+
 			return true;
 		} else {
 			logger.error(
