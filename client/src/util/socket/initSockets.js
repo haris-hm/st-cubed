@@ -11,3 +11,20 @@ export const socket = io({
 export function initSockets({ setValue }) {
 	socketEvents({ setValue });
 }
+
+export function initialSocketState() {
+	return {
+		roomID: null,
+		gameState: "waiting",
+		gameStartCountdown: null,
+		players: [],
+		currentTurn: null,
+		currentTime: null,
+		boardState: {
+			currentBoardIndex: -1,
+			subGameStates: null,
+			superBoardState: null,
+		},
+		winner: null,
+	};
+}

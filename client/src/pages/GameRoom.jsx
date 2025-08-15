@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { RoomCode, Board } from "../components/game";
+import { Board, GameEndModal, RoomCode } from "../components/game";
 import { Background } from "../components/ui";
 
 import { SocketContext } from "../context/Context";
@@ -26,6 +26,9 @@ function GameRoom() {
 						: "Game is paused"
 				}
 				state={gameState}
+				className={`z-100 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}
+			/>
+			<GameEndModal
 				className={`z-100 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}
 			/>
 			<Board />

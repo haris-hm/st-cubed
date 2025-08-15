@@ -80,7 +80,7 @@ function Board() {
 	return (
 		<>
 			<div
-				className={`flex size-full select-none flex-col p-5 max-sm:p-3 ${gameState === "paused" || gameState === "waiting" ? "opacity-90 blur-[4px]" : ""}`}
+				className={`flex size-full select-none flex-col p-5 max-sm:p-3 ${gameState !== "playing" ? "opacity-90 blur-[4px]" : ""}`}
 			>
 				{!isMobile ? <GameInfoBar className="pb-4" /> : null}
 				<div className="max-md:mt-15 flex items-center justify-center">

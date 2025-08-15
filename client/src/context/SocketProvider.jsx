@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { initSockets } from "../util/socket/initSockets";
+import { initSockets, initialSocketState } from "../util/socket/initSockets";
 import { SocketContext } from "./Context";
 
 /**
@@ -15,27 +15,14 @@ import { SocketContext } from "./Context";
  * @returns {JSX.Element} - The SocketProvider component that provides socket context to its children.
  */
 function SocketProvider({ children }) {
-	const [value, setValue] = useState({
-		roomID: null,
-		gameState: "waiting",
-		gameStartCountdown: null,
-		players: [],
-		currentTurn: null,
-		currentTime: null,
-		boardState: {
-			currentBoardIndex: -1,
-			subGameStates: null,
-			superBoardState: null,
-		},
-		winner: null,
-	});
+	const [value, setValue] = useState(initialSocketState());
 
 	useEffect(() => {
 		initSockets({ setValue });
 	}, []);
 
 	return (
-		<SocketContext.Provider value={value}>
+		<SocketContext.Provider value={{ ...value, setValue }}>
 			{children}
 		</SocketContext.Provider>
 	);

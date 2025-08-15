@@ -21,27 +21,20 @@ import { capitalizeFirstLetters } from "../../util/game/roomInfo";
 function RoomCode({ roomId, countdown, state, heading = "", className = "" }) {
 	const shareRef = useRef(null);
 	const countdownRef = useRef(null);
-	const codeModal = useRef(null);
 
 	/* Toggles visibility of the countdown and the room code, depending on
 	 * the state of the countdown */
 	useEffect(() => {
-		if (countdown) {
-			shareRef.current.classList.add("hidden");
-			countdownRef.current.classList.remove("hidden");
-		} else {
-			shareRef.current.classList.remove("hidden");
-			countdownRef.current.classList.add("hidden");
-		}
-
-		codeModal?.current?.classList.toggle(
-			"hidden",
-			state === "playing" || state === "finished",
-		);
+		const showCountdown = Boolean(countdown);
+		shareRef.current.classList.toggle("hidden", showCountdown);
+		countdownRef.current.classList.toggle("hidden", !showCountdown);
 	}, [countdown, state]);
 
 	return (
-		<Modal className={`text-primary ${className}`} ref={codeModal}>
+		<Modal
+			className={`text-primary ${className}`}
+			show={state === "waiting" || state === "paused"}
+		>
 			<div ref={shareRef}>
 				<h1 className="mb-3 text-5xl font-semibold max-md:text-3xl">
 					{heading || "Waiting for a friend..."}

@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import { leaveRoom } from "../../util/socket/emit";
 import { Button } from "../ui";
+import { useLeaveGame } from "../../hooks/useLeaveGame";
 
 /**
  *
@@ -11,21 +10,12 @@ import { Button } from "../ui";
  * @returns {JSX.Element} The rendered LeaveGameButton component.
  */
 function LeaveGameButton({ onLeaveGame, className = "" }) {
-	const navigate = useNavigate();
-
-	function handleLeaveGame(success) {
-		if (success) {
-			navigate("/");
-			onLeaveGame();
-		}
-	}
+	const handleLeaveGame = useLeaveGame(onLeaveGame);
 
 	return (
 		<Button
 			color="secondary"
-			onClick={() => {
-				leaveRoom(handleLeaveGame);
-			}}
+			onClick={handleLeaveGame}
 			className={`h-full px-4 py-2 ${className}`}
 		>
 			<img

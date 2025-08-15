@@ -3,6 +3,7 @@ export { VerticalDivider, HorizontalDivider } from "./BoardDividers";
 export { default as Cell } from "./Cell";
 export { default as DesktopButtonGroup } from "./DesktopButtonGroup";
 export { default as Footer } from "./Footer";
+export { default as GameEndModal } from "./GameEndModal";
 export { default as GameInfoBar } from "./GameInfoBar";
 export { default as GameInfoColumn } from "./GameInfoColumn";
 export { default as LeaveGameButton } from "./LeaveGameButton";
