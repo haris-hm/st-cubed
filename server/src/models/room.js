@@ -37,6 +37,7 @@ class Room {
 		this.playerX = null;
 		this.playerO = null;
 		this.lastJoinedPlayer = null;
+		this.lastWinner = null;
 		this.spectators = [];
 
 		this.currentTurn = null; // Player who is currently playing
@@ -184,6 +185,7 @@ class Room {
 	startGame(io) {
 		if (this.getPlayerCount() === 2) {
 			this.state = "playing";
+			this.lastWinner = null;
 			this.currentTurn = this.playerX;
 
 			const payload = {
@@ -245,8 +247,11 @@ class Room {
 	restartGame(io) {
 		this.state = "waiting";
 		this.game = new SuperTicTacToe();
-		this.currentTurn =
-			this.currentTurn === this.playerX ? this.playerO : this.playerX;
+		if (this.playerX === this.lastWinner) {
+			this.playerX.setPlayPiece("O");
+			this.playerO.setPlayPiece("X");
+			[this.playerX, this.playerO] = [this.playerO, this.playerX];
+		}
 		this.startGameSequence(io);
 	}
 
@@ -307,11 +312,16 @@ class Room {
 				superBoardState,
 			});
 
-			if (this.state === "finished")
+			if (this.state === "finished") {
+				const winnerPiece = superBoardState?.winState?.player;
+				const winner =
+					winnerPiece === "X" ? this.playerX : this.playerO;
+				this.lastWinner = winner;
 				this.emitMessageToPlayers(io, "game-finished", {
 					gameState: this.state,
-					winner: this.currentTurn,
+					winner: winner,
 				});
+			}
 
 			return true;
 		} else {

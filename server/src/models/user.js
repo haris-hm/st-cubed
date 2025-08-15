@@ -41,6 +41,11 @@ class User {
 		this.currentRoom = room;
 	}
 
+	equals(other) {
+		if (!(other instanceof User)) return false;
+		return this.discordId === other.discordId;
+	}
+
 	/**
 	 * Makes a player object out of this user with the given playPiece
 	 * @param {string} playPiece - The piece the player will play with (X or O)
@@ -79,6 +84,10 @@ class Player extends User {
 
 	setPlayAgain(playAgain) {
 		this.playAgain = playAgain;
+	}
+
+	setPlayPiece(playPiece) {
+		this.playPiece = playPiece;
 	}
 
 	getPlayPiece() {
