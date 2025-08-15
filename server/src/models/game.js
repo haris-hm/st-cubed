@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 class BoardState {
 	static X = "X";
 	static O = "O";
@@ -97,6 +99,7 @@ class TicTacToe {
 
 class SuperTicTacToe {
 	constructor() {
+		this.uuid = uuidv4();
 		this.boards = Array(9)
 			.fill(null)
 			.map(() => new TicTacToe());
@@ -180,6 +183,10 @@ class SuperTicTacToe {
 			subGameStates: this.boards.map((board) => board.getState()),
 			superBoardState: this.superBoard.getState(),
 		};
+	}
+
+	getBoardID() {
+		return this.uuid;
 	}
 }
 

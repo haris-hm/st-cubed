@@ -13,7 +13,8 @@ import { SocketContext } from "../context/Context";
  */
 function GameRoom() {
 	const { roomId } = useParams();
-	const { gameState, gameStartCountdown } = useContext(SocketContext);
+	const { gameState, gameStartCountdown, boardID } =
+		useContext(SocketContext);
 
 	return (
 		<Background>
@@ -31,7 +32,7 @@ function GameRoom() {
 			<GameEndModal
 				className={`z-100 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}
 			/>
-			<Board />
+			<Board key={boardID} />
 		</Background>
 	);
 }

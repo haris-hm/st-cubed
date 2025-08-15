@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
+import { SocketContext } from "../../context/Context";
 
 function WinnerIndicatorLine({
 	gameState,
@@ -9,6 +10,7 @@ function WinnerIndicatorLine({
 	const animationPlayed = useRef(false);
 	const lineRef = useRef(null);
 	const styles = useRef("");
+	const { resetting } = useContext(SocketContext);
 
 	useEffect(() => {
 		const horizontalStyles = `h-[var(--stroke)] left-0 right-0 -translate-y-1/2 animate-winner-line-grow-x`;
@@ -80,7 +82,7 @@ function WinnerIndicatorLine({
 				}, 400);
 			}
 		}
-	}, [gameState, triggerAnimation, animationPlayed]);
+	}, [gameState, triggerAnimation, animationPlayed, resetting]);
 
 	return (
 		<div

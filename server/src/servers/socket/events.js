@@ -304,6 +304,38 @@ function leaveRoom(
 	callback(false);
 }
 
+function requestPlayAgain(
+	{ socket, io, currentUsers, currentRooms },
+	callback,
+) {
+	const socketId = socket.id;
+	const user = currentUsers.get(socketId);
+
+	if (!user) {
+		logger.error({ socketID: socket.id }, "User not found");
+		callback(false);
+		return;
+	}
+
+	const roomID = user.getCurrentRoom();
+
+	if (!roomID) {
+		logger.error({ socketID: socket.id }, "User not in a room");
+		callback(false);
+		return;
+	}
+
+	const room = currentRooms.get(roomID);
+	if (!room) {
+		logger.error({ roomID: roomID }, "Room not found");
+		callback(false);
+		return;
+	}
+
+	room.handlePlayAgainRequest(io, user.getDiscordId());
+	callback(true);
+}
+
 export {
 	registerUser,
 	createRoom,
@@ -311,4 +343,5 @@ export {
 	validateRoomID,
 	makeMove,
 	leaveRoom,
+	requestPlayAgain,
 };

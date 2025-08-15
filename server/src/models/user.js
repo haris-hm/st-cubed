@@ -70,10 +70,15 @@ class Player extends User {
 		super(discordId, socketId, username, displayName, avatarHash);
 		this.playPiece = playPiece; // X or O
 		this.active = false;
+		this.playAgain = false;
 	}
 
 	setActive(active) {
 		this.active = active;
+	}
+
+	setPlayAgain(playAgain) {
+		this.playAgain = playAgain;
 	}
 
 	getPlayPiece() {
@@ -82,6 +87,10 @@ class Player extends User {
 
 	isActive() {
 		return this.active;
+	}
+
+	requestedPlayAgain() {
+		return this.playAgain;
 	}
 }
 

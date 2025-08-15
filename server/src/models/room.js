@@ -188,6 +188,7 @@ class Room {
 
 			const payload = {
 				roomID: this.id,
+				boardID: this.game.getBoardID(),
 				gameState: this.state,
 				players: this.serializePlayers(),
 				currentTurn: this.currentTurn.getDiscordId(),
@@ -209,6 +210,44 @@ class Room {
 		};
 
 		this.emitMessageToPlayers(io, "update-board", payload);
+	}
+
+	handlePlayAgainRequest(io, discordID) {
+		const player = this.getPlayers().find(
+			(player) => player.getDiscordId() === discordID,
+		);
+
+		if (!player) {
+			logger.warn(
+				`Player ${discordID} attempted to request play again in room ${this.id} but was not found.`,
+			);
+			return false;
+		}
+
+		player.setPlayAgain(true);
+		const playersRequestingPlayAgain = this.getPlayers().filter((player) =>
+			player.requestedPlayAgain(),
+		);
+
+		if (playersRequestingPlayAgain.length < 2) {
+			this.emitMessageToPlayers(io, "play-again-requested", {
+				playAgain: { requestingPlayer: player },
+			});
+		} else {
+			playersRequestingPlayAgain.forEach((p) => p.setPlayAgain(false));
+			this.emitMessageToPlayers(io, "reset-game", {});
+			this.restartGame(io);
+		}
+
+		return true;
+	}
+
+	restartGame(io) {
+		this.state = "waiting";
+		this.game = new SuperTicTacToe();
+		this.currentTurn =
+			this.currentTurn === this.playerX ? this.playerO : this.playerX;
+		this.startGameSequence(io);
 	}
 
 	validateMoveData(userID, boardIndex, position) {

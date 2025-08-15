@@ -3,12 +3,19 @@ import { useContext } from "react";
 import { Button, Modal } from "../ui";
 import { useLeaveGame } from "../../hooks/useLeaveGame";
 import { SocketContext } from "../../context/Context";
+import { requestPlayAgain } from "../../util/socket/emit";
 
 function GameEndModal({ className = "" }) {
 	const handleLeaveGame = useLeaveGame();
-	const { gameState, winner } = useContext(SocketContext);
+	const {
+		gameState,
+		winner,
+		playAgain: { requestingPlayer },
+	} = useContext(SocketContext);
 
-	function handlePlayAgain() {}
+	function handlePlayAgain() {
+		requestPlayAgain(() => {});
+	}
 
 	return (
 		<Modal
@@ -22,12 +29,27 @@ function GameEndModal({ className = "" }) {
 				{winner ? `${winner.displayName} wins!` : "It's a draw!"}
 			</h2>
 
-			<Button
-				text={"Play Again"}
-				color={"primary"}
-				onClick={handlePlayAgain}
-				className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
-			/>
+			{requestingPlayer ? (
+				<Button
+					color={"primary"}
+					onClick={handlePlayAgain}
+					className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
+				>
+					<div className="flex flex-col justify-center">
+						<h1>Play Again</h1>
+						<h2 className="text-sm font-normal">
+							Requested by {requestingPlayer.displayName}
+						</h2>
+					</div>
+				</Button>
+			) : (
+				<Button
+					text={"Play Again"}
+					color={"primary"}
+					onClick={handlePlayAgain}
+					className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
+				/>
+			)}
 
 			<Button
 				text={"Leave Game"}

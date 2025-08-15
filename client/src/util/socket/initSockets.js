@@ -15,6 +15,7 @@ export function initSockets({ setValue }) {
 export function initialSocketState() {
 	return {
 		roomID: null,
+		boardID: null,
 		gameState: "waiting",
 		gameStartCountdown: null,
 		players: [],
@@ -26,5 +27,6 @@ export function initialSocketState() {
 			superBoardState: null,
 		},
 		winner: null,
+		playAgain: { requestingPlayer: null },
 	};
 }

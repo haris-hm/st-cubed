@@ -86,6 +86,10 @@ function leaveRoom(callback) {
 	socket.emit("leave-room", callback);
 }
 
+function requestPlayAgain(callback) {
+	socket.emit("request-play-again", callback);
+}
+
 export {
 	registerUser,
 	createRoom,
@@ -93,4 +97,5 @@ export {
 	joinRoom,
 	makeMove,
 	leaveRoom,
+	requestPlayAgain,
 };

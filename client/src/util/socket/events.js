@@ -1,4 +1,4 @@
-import { socket } from "./initSockets";
+import { socket, initialSocketState } from "./initSockets";
 
 export const socketEvents = ({ setValue }) => {
 	socket.on("update-start-countdown", ({ gameStartCountdown }) => {
@@ -10,11 +10,12 @@ export const socketEvents = ({ setValue }) => {
 
 	socket.on(
 		"start-game",
-		({ roomID, gameState, players, currentTurn, currentTime }) => {
+		({ roomID, boardID, gameState, players, currentTurn, currentTime }) => {
 			setValue((state) => {
 				return {
 					...state,
 					roomID,
+					boardID,
 					gameState,
 					players,
 					currentTurn,
@@ -79,6 +80,18 @@ export const socketEvents = ({ setValue }) => {
 	socket.on("game-finished", ({ gameState, winner }) => {
 		setValue((state) => {
 			return { ...state, gameState, winner };
+		});
+	});
+
+	socket.on("request-play-again", ({ requestingPlayer }) => {
+		setValue((state) => {
+			return { ...state, playAgain: { requestingPlayer } };
+		});
+	});
+
+	socket.on("reset-game", () => {
+		setValue((state) => {
+			return { ...state, ...initialSocketState() };
 		});
 	});
 };

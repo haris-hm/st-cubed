@@ -25,6 +25,7 @@ function SubBoard({
 		boardState: { currentBoardIndex, superBoardState, subGameStates },
 		currentTurn,
 		gameState,
+		resetting,
 	} = useContext(SocketContext);
 
 	const cellClaimIcon = useRef(null);
@@ -44,7 +45,7 @@ function SubBoard({
 		if (canMakeMove) {
 			canMakeMove.current = isCurrentTurn && gameState === "playing";
 		}
-	}, [gameState, isCurrentTurn]);
+	}, [gameState, isCurrentTurn, resetting]);
 
 	function resolveClaimedIcon() {
 		if (superBoardState?.board[boardIndex] === "X") {

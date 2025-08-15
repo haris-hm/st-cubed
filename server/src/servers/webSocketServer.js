@@ -9,6 +9,7 @@ import {
 	validateRoomID,
 	makeMove,
 	leaveRoom,
+	requestPlayAgain,
 } from "./socket/events.js";
 
 // This holds all socketIds and their corresponding room instance
@@ -52,6 +53,10 @@ function createSocketEndpoints(socket, io) {
 
 	socket.on("leave-room", (callback) => {
 		leaveRoom(context, callback);
+	});
+
+	socket.on("request-play-again", (callback) => {
+		requestPlayAgain(context, callback);
 	});
 
 	socket.on("disconnect", () => {
