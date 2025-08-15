@@ -24,7 +24,7 @@ function SubBoard({
 	const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 	const { auth } = useContext(DiscordSDKContext);
 	const {
-		boardState: { currentBoardIndex, superBoardState },
+		boardState: { currentBoardIndex, superBoardState, subGameStates },
 		currentTurn,
 	} = useContext(SocketContext);
 
@@ -86,7 +86,9 @@ function SubBoard({
 			>
 				<div className="relative">
 					<WinnerIndicatorLine
-						boardIndex={boardIndex}
+						gameState={
+							subGameStates ? subGameStates[boardIndex] : null
+						}
 						triggerAnimation={animateCellPulse}
 					/>
 					<VerticalDivider

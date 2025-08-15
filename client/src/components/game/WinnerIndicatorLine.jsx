@@ -1,20 +1,18 @@
-import { useContext, useEffect, useRef } from "react";
-import { SocketContext } from "../../context/Context";
+import { useEffect, useRef } from "react";
 
-function WinnerIndicatorLine({ boardIndex, triggerAnimation }) {
-	const {
-		boardState: { subGameStates },
-	} = useContext(SocketContext);
-
+function WinnerIndicatorLine({
+	gameState,
+	triggerAnimation,
+	zIndex = "z-30",
+	strokeSize = "2",
+}) {
 	const animationPlayed = useRef(false);
 	const lineRef = useRef(null);
 	const styles = useRef("");
 
 	useEffect(() => {
-		const horizontalStyles =
-			"h-2 left-0 right-0 -translate-y-1/2 animate-winner-line-grow-x";
-		const verticalStyles =
-			"w-2 top-0 bottom-0 -translate-x-1/2 animate-winner-line-grow-y";
+		const horizontalStyles = `h-[var(--stroke)] left-0 right-0 -translate-y-1/2 animate-winner-line-grow-x`;
+		const verticalStyles = `w-[var(--stroke)] top-0 bottom-0 -translate-x-1/2 animate-winner-line-grow-y`;
 
 		const combinationTypes = [
 			{
@@ -59,12 +57,8 @@ function WinnerIndicatorLine({ boardIndex, triggerAnimation }) {
 			},
 		];
 
-		if (
-			subGameStates &&
-			subGameStates[boardIndex]?.winState?.winningCombination
-		) {
-			const winningCombination =
-				subGameStates[boardIndex].winState?.winningCombination;
+		if (gameState?.winState?.winningCombination) {
+			const winningCombination = gameState.winState?.winningCombination;
 
 			const winningType = combinationTypes.find((combination) =>
 				combination.combination.every((index) =>
@@ -86,12 +80,13 @@ function WinnerIndicatorLine({ boardIndex, triggerAnimation }) {
 				}, 400);
 			}
 		}
-	}, [boardIndex, subGameStates, triggerAnimation, animationPlayed]);
+	}, [gameState, triggerAnimation, animationPlayed]);
 
 	return (
 		<div
-			className={`bg-tertiary absolute z-30 rounded-2xl ${styles?.current}`}
+			className={`bg-tertiary absolute rounded-2xl ${zIndex} ${styles?.current}`}
 			ref={lineRef}
+			style={{ "--stroke": `calc(var(--spacing) * ${strokeSize})` }}
 		/>
 	);
 }

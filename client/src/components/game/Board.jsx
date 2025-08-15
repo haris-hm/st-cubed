@@ -7,7 +7,7 @@ import {
 	MobileSubBoard,
 	GameInfoBar,
 	GameInfoColumn,
-	Footer,
+	WinnerIndicatorLine,
 } from "./";
 import { useMediaQuery } from "react-responsive";
 import { makeMove } from "../../util/socket/emit";
@@ -85,6 +85,16 @@ function Board() {
 				{!isMobile ? <GameInfoBar className="pb-4" /> : null}
 				<div className="max-md:mt-15 flex items-center justify-center">
 					<div className="relative mx-auto aspect-square max-h-[calc(100vh-120px-2.5rem)] w-full max-w-[min(100vw,100vh-120px)]">
+						<WinnerIndicatorLine
+							gameState={
+								boardState?.superBoardState
+									? boardState.superBoardState
+									: null
+							}
+							triggerAnimation={() => {}}
+							zIndex="z-50"
+							strokeSize="3.5"
+						/>
 						<VerticalDivider
 							index={0}
 							className={verticalDividerStyles}
