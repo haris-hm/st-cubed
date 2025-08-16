@@ -27,6 +27,10 @@ export function initialSocketState() {
 			superBoardState: null,
 		},
 		winner: null,
-		playAgain: { requestingPlayer: null },
+		playAgain: {
+			requestingPlayer: null,
+			gameAbandoned: false,
+			abandoningPlayerName: null,
+		},
 	};
 }

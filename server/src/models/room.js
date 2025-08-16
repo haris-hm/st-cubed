@@ -99,6 +99,10 @@ class Room {
 	}
 
 	handlePlayerLeave(io, discordID) {
+		const abandoningPlayerName = this.getPlayers().find(
+			(player) => player.discordId === discordID,
+		);
+
 		if (this.playerX && this.playerX.getDiscordId() === discordID) {
 			this.playerX = null;
 		} else if (this.playerO && this.playerO.getDiscordId() === discordID) {
@@ -108,15 +112,27 @@ class Room {
 			return { success: false, playerCount: this.getPlayerCount() };
 		}
 
-		if (this.state === "playing" && this.getPlayerCount() > 0) {
-			if (
-				this.currentTurn &&
-				this.currentTurn.getDiscordId() === discordID
-			) {
-				this.currentTurn = null;
-			}
+		if (this.getPlayerCount() <= 0) {
+			return { success: true, playerCount: 0 };
+		}
 
-			this.pauseGame(io);
+		switch (this.state) {
+			case "playing":
+				if (
+					this.currentTurn &&
+					this.currentTurn.getDiscordId() === discordID
+				) {
+					this.currentTurn = null;
+				}
+
+				this.pauseGame(io);
+			case "finished":
+				this.emitMessageToPlayers(io, "game-abandoned", {
+					playAgain: {
+						gameAbandoned: true,
+						abandoningPlayerName: abandoningPlayerName,
+					},
+				});
 		}
 
 		return { success: true, playerCount: this.getPlayerCount() };
@@ -232,12 +248,12 @@ class Room {
 		);
 
 		if (playersRequestingPlayAgain.length < 2) {
-			this.emitMessageToPlayers(io, "play-again-requested", {
+			this.emitMessageToPlayers(io, "request-new-round", {
 				playAgain: { requestingPlayer: player },
 			});
 		} else {
 			playersRequestingPlayAgain.forEach((p) => p.setPlayAgain(false));
-			this.emitMessageToPlayers(io, "reset-game", {});
+			this.emitMessageToPlayers(io, "reset-game");
 			this.restartGame(io);
 		}
 

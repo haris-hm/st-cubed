@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 
 import { Button, Modal } from "../ui";
 import { useLeaveGame } from "../../hooks/useLeaveGame";
-import { SocketContext } from "../../context/Context";
+import { SocketContext, DiscordSDKContext } from "../../context/Context";
+import { getUserId } from "../../util/discord/getUserInfo";
 import { requestPlayAgain } from "../../util/socket/emit";
 
 function GameEndModal({ className = "" }) {
@@ -10,8 +11,35 @@ function GameEndModal({ className = "" }) {
 	const {
 		gameState,
 		winner,
-		playAgain: { requestingPlayer },
+		playAgain: { requestingPlayer, gameAbandoned, abandoningPlayerName },
 	} = useContext(SocketContext);
+	const { auth } = useContext(DiscordSDKContext);
+
+	const userID = getUserId(auth);
+
+	const { playAgainDisabled, playAgainContents } = useMemo(() => {
+		if (gameAbandoned) {
+			return {
+				playAgainDisabled: true,
+				playAgainContents: (
+					<h2 className="text-modal-gray text-sm font-normal">
+						{`${abandoningPlayerName.displayName} has left the game`}
+					</h2>
+				),
+			};
+		}
+		if (requestingPlayer) {
+			return {
+				playAgainDisabled: requestingPlayer.discordId === userID,
+				playAgainContents: (
+					<h2 className="text-modal-gray text-base font-normal">
+						Requested by {requestingPlayer.displayName}
+					</h2>
+				),
+			};
+		}
+		return { playAgainDisabled: false, playAgainContents: null };
+	}, [abandoningPlayerName, gameAbandoned, requestingPlayer, userID]);
 
 	function handlePlayAgain() {
 		requestPlayAgain(() => {});
@@ -29,27 +57,17 @@ function GameEndModal({ className = "" }) {
 				{winner ? `${winner.displayName} wins!` : "It's a draw!"}
 			</h2>
 
-			{requestingPlayer ? (
-				<Button
-					color={"primary"}
-					onClick={handlePlayAgain}
-					className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
-				>
-					<div className="flex flex-col justify-center">
-						<h1>Play Again</h1>
-						<h2 className="text-sm font-normal">
-							Requested by {requestingPlayer.displayName}
-						</h2>
-					</div>
-				</Button>
-			) : (
-				<Button
-					text={"Play Again"}
-					color={"primary"}
-					onClick={handlePlayAgain}
-					className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
-				/>
-			)}
+			<Button
+				color="primary"
+				onClick={handlePlayAgain}
+				disabled={playAgainDisabled}
+				className="mt-4 min-h-20 w-full max-md:mx-0 max-md:my-3 md:mx-3"
+			>
+				<div className="flex flex-col justify-center">
+					<h1>Play Again</h1>
+					{playAgainContents}
+				</div>
+			</Button>
 
 			<Button
 				text={"Leave Game"}

@@ -16,6 +16,7 @@ function Button({
 	color,
 	onClick,
 	className = "",
+	disabled = false,
 	children = null,
 }) {
 	const colorClasses = {
@@ -26,12 +27,13 @@ function Button({
 	};
 
 	const styles = twMerge(
-		`${colorClasses[color]} active:inset-shadow-sm active:inset-shadow-dark text-light font-noto-sans cursor-pointer select-none rounded-xl text-3xl font-bold focus:outline-2 focus:outline-offset-2 active:brightness-50`,
+		"text-light font-noto-sans select-none rounded-xl text-3xl font-bold",
+		`${disabled ? "bg-gray-500" : `${colorClasses[color]} active:inset-shadow-sm active:inset-shadow-dark cursor-pointer focus:outline-2 focus:outline-offset-2 active:brightness-50`}`,
 		className,
 	);
 
 	return (
-		<button onClick={onClick} className={styles}>
+		<button onClick={onClick} className={styles} disabled={disabled}>
 			{children ? <>{children}</> : <>{text}</>}
 		</button>
 	);

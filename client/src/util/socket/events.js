@@ -83,15 +83,21 @@ export const socketEvents = ({ setValue }) => {
 		});
 	});
 
-	socket.on("request-play-again", ({ requestingPlayer }) => {
+	socket.on("request-new-round", ({ playAgain }) => {
 		setValue((state) => {
-			return { ...state, playAgain: { requestingPlayer } };
+			return { ...state, playAgain };
 		});
 	});
 
 	socket.on("reset-game", () => {
 		setValue((state) => {
 			return { ...state, ...initialSocketState() };
+		});
+	});
+
+	socket.on("game-abandoned", ({ playAgain }) => {
+		setValue((state) => {
+			return { ...state, playAgain };
 		});
 	});
 };
